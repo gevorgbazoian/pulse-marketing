@@ -18,15 +18,26 @@ export default function Partners({ onNavigate }) {
   // Mobile Ticker State
   const [selectedMobileIndex, setSelectedMobileIndex] = useState(null);
 
+  const activeHoverIndexRef = useRef(activeHoverIndex);
+  const mousePosRef = useRef(mousePos);
+
+  useEffect(() => {
+    activeHoverIndexRef.current = activeHoverIndex;
+  }, [activeHoverIndex]);
+
+  useEffect(() => {
+    mousePosRef.current = mousePos;
+  }, [mousePos]);
+
   const clients = [
-    { name: 'KOOM', type: t('partners.types.coffee'), desc: 'Crafting specialty single-origin roasts.' },
-    { name: 'Storia', type: t('partners.types.restaurant'), desc: 'Exquisite modern dining experience.' },
-    { name: 'Villa Dudu', type: t('partners.types.guesthouse'), desc: 'Luxury guest rooms with historic charm.' },
-    { name: 'Coffee Centre', type: t('partners.types.roastery'), desc: 'Premium coffee supply and education.' },
-    { name: 'Mah-Chah', type: t('partners.types.tea'), desc: 'Organic loose leaf tea blends.' },
-    { name: 'Après', type: t('partners.types.premium'), desc: 'Exclusive boutique leisure spaces.' },
-    { name: 'Noma', type: t('partners.types.bar'), desc: 'Award-winning mixology & lounge.' },
-    { name: 'Gilla', type: t('partners.types.visual'), desc: 'Avant-garde digital branding and identity.' }
+    { name: 'KOOM', type: t('partners.types.coffee'), desc: 'Specialty Coffee / SMM + Content / 1.2M+ views' },
+    { name: 'Storia', type: t('partners.types.restaurant'), desc: 'Premium Restaurant / Branding + SMM / 2.5M+ views' },
+    { name: 'Villa Dudu', type: t('partners.types.guesthouse'), desc: 'Boutique Guest House / Digital Ads / 800K+ reach' },
+    { name: 'Coffee Centre', type: t('partners.types.roastery'), desc: 'Coffee Roastery & Academy / SMM / 1.5M+ impressions' },
+    { name: 'Mah-Chah', type: t('partners.types.tea'), desc: 'Organic loose leaf tea blends / Content / 600K+ views' },
+    { name: 'Après', type: t('partners.types.premium'), desc: 'Exclusive Leisure Spaces / SMM + Ads / 1.8M+ views' },
+    { name: 'Noma', type: t('partners.types.bar'), desc: 'Award-winning mixology & lounge / Branding / 900K+ reach' },
+    { name: 'Gilla', type: t('partners.types.visual'), desc: 'Avant-garde digital branding / Visuals / 1.1M+ views' }
   ];
 
   // Desktop coordinates for a perfect symmetric 2x4 Kinetic Grid
@@ -45,14 +56,14 @@ export default function Partners({ onNavigate }) {
 
   // Initial chaotic positions for the "shoot in" scroll reveal animation
   const initialPositions = [
-    { left: '-20%', top: '-20%', rotate: '-45deg' },  // KOOM shoots left-top
-    { left: '30%', top: '-35%', rotate: '30deg' },   // Storia shoots straight up
-    { left: '55%', top: '-35%', rotate: '-20deg' },  // Villa Dudu shoots straight up
-    { left: '120%', top: '-20%', rotate: '40deg' },   // Coffee Centre shoots right-top
-    { left: '-20%', top: '120%', rotate: '-30deg' },  // Mah-Chah shoots left-bottom
-    { left: '30%', top: '135%', rotate: '25deg' },   // Après shoots straight down
-    { left: '55%', top: '135%', rotate: '-35deg' },  // Noma shoots straight down
-    { left: '120%', top: '120%', rotate: '50deg' }   // Gilla shoots right-bottom
+    { left: '-35%', top: '40px', rotate: '0deg' },    // KOOM shoots from left
+    { left: '30%', top: '-45%', rotate: '0deg' },    // Storia shoots from top
+    { left: '55%', top: '-45%', rotate: '-10deg' },  // Villa Dudu shoots from top-right
+    { left: '130%', top: '10px', rotate: '15deg' },  // Coffee Centre shoots from right
+    { left: '-30%', top: '180px', rotate: '-10deg' }, // Mah-Chah shoots from bottom-left
+    { left: '30%', top: '145%', rotate: '0deg' },    // Après shoots from bottom
+    { left: '55%', top: '145%', rotate: '10deg' },   // Noma shoots from bottom-right
+    { left: '130%', top: '220px', rotate: '20deg' }  // Gilla shoots from bottom-right
   ];
 
   // Scroll Reveal Observer
@@ -133,19 +144,65 @@ export default function Partners({ onNavigate }) {
     // Scroll reveal gravitational wave state
     let waveY = -100;
     let waveActive = false;
+    let time = 0;
     
     if (isRevealed) {
       waveActive = true;
       waveY = 0;
     }
 
+    const getCardPos = (idx) => {
+      const coord = coords[idx];
+      if (!coord) return { x: 0, y: 0 };
+      const leftPx = (parseFloat(coord.left) / 100) * canvas.width;
+      const topPx = parseFloat(coord.top) + 40; // Center offset
+      
+      const factor = coord.factor;
+      const cardParallaxX = isHovered ? mousePosRef.current.x * 0.05 * factor : 0;
+      const cardParallaxY = isHovered ? mousePosRef.current.y * 0.05 * factor : 0;
+      
+      const isMe = activeHoverIndexRef.current === idx;
+      
+      return {
+        x: leftPx + cardParallaxX + (isMe ? mousePosRef.current.x * 0.15 : 0),
+        y: topPx + cardParallaxY + (isMe ? mousePosRef.current.y * 0.15 : 0)
+      };
+    };
+
     let animFrameId;
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      time += 0.015;
 
       // Advance gravitational wave
       if (waveActive && waveY < canvas.height + 200) {
         waveY += 12; // Speed of the wave
+      }
+
+      // Draw constellation connection lines
+      if (isHovered && activeHoverIndexRef.current !== null) {
+        const hoveredPos = getCardPos(activeHoverIndexRef.current);
+        const col = activeHoverIndexRef.current % 4;
+        const row = Math.floor(activeHoverIndexRef.current / 4);
+        
+        const neighbors = [];
+        if (col > 0) neighbors.push(activeHoverIndexRef.current - 1);
+        if (col < 3) neighbors.push(activeHoverIndexRef.current + 1);
+        if (row === 0) neighbors.push(activeHoverIndexRef.current + 4);
+        if (row === 1) neighbors.push(activeHoverIndexRef.current - 4);
+
+        neighbors.forEach(nIdx => {
+          const nPos = getCardPos(nIdx);
+          ctx.beginPath();
+          ctx.moveTo(hoveredPos.x, hoveredPos.y);
+          ctx.lineTo(nPos.x, nPos.y);
+          ctx.strokeStyle = 'rgba(242, 183, 5, 0.28)';
+          ctx.lineWidth = 1.2;
+          ctx.setLineDash([5, 8]);
+          ctx.lineDashOffset = -time * 25; // Animated dash flow
+          ctx.stroke();
+          ctx.setLineDash([]);
+        });
       }
 
       particles.forEach((p) => {
@@ -196,7 +253,6 @@ export default function Partners({ onNavigate }) {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color.replace('rgba', 'hsla').replace(')', `, ${opacity})`);
         ctx.fillStyle = p.color; // Fallback
         ctx.globalAlpha = opacity;
         ctx.fill();
@@ -401,47 +457,135 @@ export default function Partners({ onNavigate }) {
         })}
       </div>
 
-      {/* MOBILE VERSION: Horizontal Interactive Tickers */}
-      <div className="ticker-wall-mobile" style={{ display: 'none', zIndex: 2 }}>
-        {/* Row 1: Scroll Left */}
-        <div className={`ticker-row-mobile scroll-left ${selectedMobileIndex !== null ? 'paused' : ''}`}>
+      {/* Dynamic Constellation Tooltip */}
+      <div 
+        style={{
+          height: '42px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: '1rem',
+          transition: 'all 0.3s ease',
+          opacity: activeHoverIndex !== null ? 1 : 0,
+          transform: activeHoverIndex !== null ? 'translateY(0)' : 'translateY(5px)',
+          zIndex: 5,
+          position: 'relative'
+        }}
+        className="constellation-tooltip-container"
+      >
+        {activeHoverIndex !== null && (
+          <div 
+            style={{
+              backgroundColor: 'rgba(253, 252, 247, 0.95)',
+              border: '1.5px solid var(--accent)',
+              borderRadius: '20px',
+              padding: '0.4rem 1.5rem',
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              color: 'var(--text-primary)',
+              boxShadow: 'var(--shadow-sm)'
+            }}
+          >
+            <span style={{ color: 'var(--accent)' }}>{clients[activeHoverIndex].name}</span>
+            <span> — </span>
+            <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{clients[activeHoverIndex].desc}</span>
+          </div>
+        )}
+      </div>
+
+      {/* MOBILE VERSION: 2 Vertical Ticker Columns */}
+      <div 
+        className="ticker-wall-mobile-vertical" 
+        style={{ 
+          display: 'none', 
+          zIndex: 2,
+          justifyContent: 'center',
+          gap: '1.2rem',
+          height: '340px',
+          overflow: 'hidden',
+          position: 'relative',
+          margin: '2rem auto',
+          width: '100%'
+        }}
+      >
+        {/* Left Column (Scrolls UP) */}
+        <div 
+          className={`ticker-col-vertical scroll-up ${selectedMobileIndex !== null ? 'paused' : ''}`}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            animation: 'scroll-vertical-up 14s linear infinite',
+            animationPlayState: selectedMobileIndex !== null ? 'paused' : 'running'
+          }}
+        >
           {mobileRow1.map((idx, index) => {
             const client = clients[idx];
             const isSelected = selectedMobileIndex === idx;
             return (
               <div 
-                key={`row1-${index}`} 
+                key={`col1-${index}`} 
                 onClick={() => handleMobileSelect(idx)}
-                className={`ticker-item-mobile ${isSelected ? 'selected' : ''}`}
+                style={{
+                  padding: '1rem 1.2rem',
+                  backgroundColor: 'rgba(253, 252, 247, 0.92)',
+                  backdropFilter: 'blur(8px)',
+                  border: isSelected ? '2px solid var(--accent)' : '1px solid rgba(33, 34, 36, 0.08)',
+                  borderRadius: '16px',
+                  textAlign: 'center',
+                  minWidth: '135px',
+                  transform: isSelected ? 'scale(1.1)' : 'scale(1)',
+                  boxShadow: isSelected ? '0 10px 25px rgba(242, 183, 5, 0.2)' : 'var(--shadow-sm)',
+                  transition: 'all 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+                  cursor: 'pointer'
+                }}
               >
-                <div style={{ fontWeight: 900, fontSize: '1.1rem', color: 'var(--text-primary)' }}>{client.name}</div>
-                {isSelected && (
-                  <div style={{ fontSize: '0.65rem', color: 'var(--accent)', marginTop: '4px', textTransform: 'uppercase', fontWeight: 800 }}>
-                    {client.type}
-                  </div>
-                )}
+                <div style={{ fontWeight: 900, fontSize: '1.05rem', color: 'var(--text-primary)' }}>{client.name}</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--accent)', marginTop: '4px', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>
+                  {client.type}
+                </div>
               </div>
             );
           })}
         </div>
 
-        {/* Row 2: Scroll Right */}
-        <div className={`ticker-row-mobile scroll-right ${selectedMobileIndex !== null ? 'paused' : ''}`}>
+        {/* Right Column (Scrolls DOWN) */}
+        <div 
+          className={`ticker-col-vertical scroll-down ${selectedMobileIndex !== null ? 'paused' : ''}`}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            animation: 'scroll-vertical-down 14s linear infinite',
+            animationPlayState: selectedMobileIndex !== null ? 'paused' : 'running'
+          }}
+        >
           {mobileRow2.map((idx, index) => {
             const client = clients[idx];
             const isSelected = selectedMobileIndex === idx;
             return (
               <div 
-                key={`row2-${index}`} 
+                key={`col2-${index}`} 
                 onClick={() => handleMobileSelect(idx)}
-                className={`ticker-item-mobile ${isSelected ? 'selected' : ''}`}
+                style={{
+                  padding: '1rem 1.2rem',
+                  backgroundColor: 'rgba(253, 252, 247, 0.92)',
+                  backdropFilter: 'blur(8px)',
+                  border: isSelected ? '2px solid var(--accent)' : '1px solid rgba(33, 34, 36, 0.08)',
+                  borderRadius: '16px',
+                  textAlign: 'center',
+                  minWidth: '135px',
+                  transform: isSelected ? 'scale(1.1)' : 'scale(1)',
+                  boxShadow: isSelected ? '0 10px 25px rgba(242, 183, 5, 0.2)' : 'var(--shadow-sm)',
+                  transition: 'all 0.3s cubic-bezier(0.25, 1, 0.5, 1)',
+                  cursor: 'pointer'
+                }}
               >
-                <div style={{ fontWeight: 900, fontSize: '1.1rem', color: 'var(--text-primary)' }}>{client.name}</div>
-                {isSelected && (
-                  <div style={{ fontSize: '0.65rem', color: 'var(--accent)', marginTop: '4px', textTransform: 'uppercase', fontWeight: 800 }}>
-                    {client.type}
-                  </div>
-                )}
+                <div style={{ fontWeight: 900, fontSize: '1.05rem', color: 'var(--text-primary)' }}>{client.name}</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--accent)', marginTop: '4px', textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}>
+                  {client.type}
+                </div>
               </div>
             );
           })}
@@ -555,8 +699,8 @@ function BrandUniverseItem({ client, index, coord, initialPos, isRevealed, globa
       blurVal = '0px';
       opacityVal = 1;
     } else {
-      blurVal = '4px';
-      opacityVal = 0.28;
+      blurVal = '0px';
+      opacityVal = 0.35;
     }
   }
 
@@ -634,7 +778,7 @@ function BrandUniverseItem({ client, index, coord, initialPos, isRevealed, globa
           padding: '1rem 2rem',
           userSelect: 'none',
           cursor: 'pointer',
-          transform: `translate3d(${tx}px, ${ty}px, ${tz}px) rotateX(${rx}deg) rotateY(${ry}deg) scale(${isMeHovered ? 1.25 : 1})`,
+          transform: `translate3d(${tx}px, ${ty}px, ${tz}px) rotateX(${rx}deg) rotateY(${ry}deg) scale(${isMeHovered ? 1.08 : 1})`,
           filter: `blur(${blurVal})`,
           opacity: opacityVal,
           textShadow: isMeHovered 

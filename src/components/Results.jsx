@@ -20,6 +20,7 @@ export default function Results() {
   const [counterValues, setCounterValues] = useState([0, 0, 0, 0]);
   const [activeShockwaves, setActiveShockwaves] = useState([]);
   const [isShaking, setIsShaking] = useState(false);
+  const [counterCompleted, setCounterCompleted] = useState(false);
   
   // Magnetic Behance Button State
   const [btnOffset, setBtnOffset] = useState({ x: 0, y: 0 });
@@ -35,6 +36,7 @@ export default function Results() {
           setIsRevealed(false);
           setPulseBeat(0);
           setCounterValues([0, 0, 0, 0]);
+          setCounterCompleted(false);
         }
       });
     }, { threshold: 0.12 });
@@ -93,8 +95,8 @@ export default function Results() {
         step += 1;
         setPulseBeat(step);
         
-        // Rhythmic jump ratios
-        const ratios = [0, 0.22, 0.48, 0.75, 0.91, 1.0];
+        // Rhythmic jump ratios with overshoot at step 4 (1.12) and settle at step 5 (1.0)
+        const ratios = [0, 0.22, 0.55, 0.88, 1.12, 1.0];
         const ratio = ratios[step] || 1.0;
         
         setCounterValues([
@@ -106,6 +108,7 @@ export default function Results() {
 
         if (step >= maxSteps) {
           clearInterval(interval);
+          setCounterCompleted(true);
         }
       }, 380); // ~160 bpm heartbeat rhythm!
       
@@ -499,6 +502,7 @@ export default function Results() {
                 value={getDisplayValue(stat.value, i)}
                 label={stat.label}
                 hasPulse={hasPulse}
+                counterCompleted={counterCompleted}
                 onMouseEnter={triggerHoverShockwave}
               />
             );
@@ -557,7 +561,7 @@ export default function Results() {
   );
 }
 
-function StatCard({ value, label, hasPulse, onMouseEnter }) {
+function StatCard({ value, label, hasPulse, counterCompleted, onMouseEnter }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -578,9 +582,28 @@ function StatCard({ value, label, hasPulse, onMouseEnter }) {
         opacity: 0, // GSAP reveals this Centrifugally
         transform: isHovered ? 'scale(0.96)' : 'scale(1)',
         willChange: 'transform',
-        transition: 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s, box-shadow 0.3s'
+        transition: 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s, box-shadow 0.3s',
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
+      {/* Dynamic completed glow sweep wave */}
+      {counterCompleted && (
+        <span 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: 'linear-gradient(90deg, transparent, rgba(242, 183, 5, 0.22), transparent)',
+            transform: 'translateX(-100%)',
+            animation: 'glow-sweep-anim 1s cubic-bezier(0.25, 1, 0.5, 1) forwards',
+            pointerEvents: 'none',
+            zIndex: 1
+          }}
+        />
+      )}
       <div 
         style={{ 
           fontFamily: 'var(--font-heading)', 
@@ -589,12 +612,14 @@ function StatCard({ value, label, hasPulse, onMouseEnter }) {
           color: isHovered ? 'var(--accent)' : 'var(--text-primary)',
           marginBottom: '0.5rem',
           lineHeight: '1.1',
-          transition: 'color 0.3s ease'
+          transition: 'color 0.3s ease',
+          position: 'relative',
+          zIndex: 2
         }}
       >
         {value}
       </div>
-      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600, position: 'relative', zIndex: 2 }}>
         {label}
       </div>
     </div>

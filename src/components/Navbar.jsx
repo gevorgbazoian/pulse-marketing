@@ -5,7 +5,10 @@ import { useLanguage } from '../LanguageContext';
 export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPage }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [shrunk, setShrunk] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const lastScrollY = useRef(0);
   
   const { language, setLanguage, t } = useLanguage();
   const dropdownRef = useRef(null);
@@ -17,20 +20,40 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > 50) {
         setScrolled(true);
       } else {
         setScrolled(false);
       }
+
+      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+        setShrunk(true);
+      } else if (currentScrollY < lastScrollY.current) {
+        setShrunk(false);
+      }
+      lastScrollY.current = currentScrollY;
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const [mobileLangDropdownOpen, setMobileLangDropdownOpen] = useState(false);
+  const mobileDropdownRef = useRef(null);
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setLangDropdownOpen(false);
+      }
+      if (mobileDropdownRef.current && !mobileDropdownRef.current.contains(e.target)) {
+        setMobileLangDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleOutsideClick);
@@ -122,7 +145,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
     };
   }, [navMouseHovered, navMouseCoords]);
 
-  const navLinks = [
+  const allNavLinks = [
     { name: t('nav.partners'), href: '#partners' },
     { name: t('nav.results'), href: '#results' },
     { name: t('nav.services'), href: '#services' },
@@ -130,6 +153,34 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
     { name: t('nav.blog'), href: '#blog' },
     { name: t('nav.contact'), href: '#contact' }
   ];
+
+  const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
+  const moreRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutsideClickMore = (e) => {
+      if (moreRef.current && !moreRef.current.contains(e.target)) {
+        setMoreDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClickMore);
+    return () => document.removeEventListener('mousedown', handleOutsideClickMore);
+  }, []);
+
+  const isMobile = windowWidth < 820;
+  const isTabletNarrow = windowWidth >= 820 && windowWidth < 980;
+  const isTabletWide = windowWidth >= 980 && windowWidth < 1180;
+
+  // Priority navigation lists
+  const visibleLinks = isMobile 
+    ? [] 
+    : (isTabletNarrow || isTabletWide)
+      ? allNavLinks.filter(link => link.href !== '#blog' && link.href !== '#about')
+      : allNavLinks;
+
+  const dropdownLinks = (isTabletNarrow || isTabletWide)
+    ? allNavLinks.filter(link => link.href === '#blog' || link.href === '#about')
+    : [];
 
   const flags = {
     hy: '🇦🇲',
@@ -160,22 +211,23 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
 
   return (
     <nav 
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 py-3' 
-          : 'bg-transparent py-5'
-      }`}
+      className="fixed top-0 left-0 w-full z-50"
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
         zIndex: 1000,
-        transition: 'var(--transition-smooth)',
+        transition: 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
         backgroundColor: scrolled ? 'rgba(253, 252, 247, 0.85)' : 'transparent',
         backdropFilter: scrolled ? 'blur(10px)' : 'none',
         borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
-        padding: scrolled ? '0.8rem clamp(1rem, 2.5vw, 2rem)' : '1.5rem clamp(1rem, 2.5vw, 2rem)'
+        boxShadow: scrolled 
+          ? (shrunk ? '0 10px 30px rgba(33, 34, 36, 0.08)' : '0 6px 20px rgba(33, 34, 36, 0.04)')
+          : '0 4px 25px rgba(33, 34, 36, 0.025)',
+        padding: shrunk
+          ? '0.6rem clamp(1rem, 2.5vw, 2rem)'
+          : (scrolled ? '1.1rem clamp(1rem, 2.5vw, 2rem)' : '1.5rem clamp(1rem, 2.5vw, 2rem)')
       }}
     >
       <div 
@@ -226,13 +278,15 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
                 height: '8px',
                 backgroundColor: 'var(--accent)',
                 borderRadius: '50%',
-                display: 'block'
+                display: 'block',
+                position: 'relative'
               }}
-            />
-            {/* 6 Mini Galaxy Orbiting Dots */}
-            {[...Array(6)].map((_, i) => (
-              <span key={i} className={`logo-galaxy-dot galaxy-dot-${i}`} />
-            ))}
+            >
+              {/* 3 Orbit Particles for Pulse Orbit signature interaction */}
+              <span className="logo-orbit-particle p1" />
+              <span className="logo-orbit-particle p2" />
+              <span className="logo-orbit-particle p3" />
+            </span>
           </span>
           <span style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--text-secondary)', marginLeft: '4px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Marketing</span>
         </a>
@@ -252,12 +306,12 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 'clamp(8px, 1.2vw, 20px)',
+            gap: isTabletNarrow ? '10px' : 'clamp(8px, 1.2vw, 20px)',
             justifyContent: 'center',
             flexShrink: 1,
-            padding: '0.35rem clamp(0.6rem, 1.5vw, 1.5rem)',
+            padding: isTabletNarrow ? '0.25rem 0.8rem' : '0.35rem clamp(0.6rem, 1.5vw, 1.5rem)',
             position: 'relative',
-            overflow: 'hidden'
+            overflow: 'visible'
           }}
         >
           {/* Bento Menu Canvas Particles background */}
@@ -274,7 +328,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
             }} 
           />
 
-          {navLinks.map((link) => {
+          {visibleLinks.map((link) => {
             const isLinkActive = 
               (link.href === '#services' && currentPage === 'services') ||
               (link.href === '#results' && currentPage === 'results') ||
@@ -290,7 +344,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
                   className="nav-item-link"
                   style={{
                     fontFamily: 'var(--font-heading)',
-                    fontSize: 'clamp(11px, 0.8vw, 13px)',
+                    fontSize: isTabletNarrow ? '11px' : 'clamp(11px, 0.8vw, 13px)',
                     fontWeight: 700,
                     color: 'var(--text-primary)',
                     textDecoration: 'none',
@@ -315,6 +369,86 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
               </div>
             );
           })}
+
+          {dropdownLinks.length > 0 && (
+            <div ref={moreRef} style={{ position: 'relative', zIndex: 1 }}>
+              <button
+                onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: isTabletNarrow ? '11px' : '13px',
+                  fontWeight: 700,
+                  color: 'var(--text-primary)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  cursor: 'pointer',
+                  padding: '0.2rem 0',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                  outline: 'none'
+                }}
+              >
+                <span>{language === 'hy' ? 'Ավելին' : language === 'ru' ? 'Еще' : 'More'}</span>
+                <span style={{ fontSize: '0.65rem' }}>▼</span>
+              </button>
+              {moreDropdownOpen && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '120%',
+                    left: 0,
+                    backgroundColor: 'var(--bg-primary)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '12px',
+                    boxShadow: 'var(--shadow-md)',
+                    padding: '0.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem',
+                    minWidth: '150px',
+                    zIndex: 1002,
+                    animation: 'fadeIn 0.2s ease-out'
+                  }}
+                >
+                  {dropdownLinks.map((link) => {
+                    const isLinkActive = 
+                      (link.href === '#about' && currentPage === 'about') ||
+                      (link.href === '#blog' && currentPage === 'blog');
+
+                    return (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        onClick={(e) => {
+                          setMoreDropdownOpen(false);
+                          handleNavLinkClick(e, link.href);
+                        }}
+                        style={{
+                          display: 'block',
+                          padding: '0.5rem 0.8rem',
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          color: isLinkActive ? 'var(--accent)' : 'var(--text-primary)',
+                          textDecoration: 'none',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          borderRadius: '8px',
+                          backgroundColor: isLinkActive ? 'rgba(242, 183, 5, 0.1)' : 'transparent',
+                          transition: 'var(--transition-fast)'
+                        }}
+                      >
+                        {link.name}
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Desktop Actions Container (Right) */}
@@ -438,20 +572,106 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
           </button>
         </div>
 
-        {/* Mobile Toggle Button */}
-        <button
-          className="mobile-toggle"
-          onClick={() => setIsOpen(!isOpen)}
+        {/* Mobile Toggle / Actions Wrapper */}
+        <div 
+          className="mobile-actions-wrapper"
           style={{
             display: 'none',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            color: 'var(--text-primary)'
+            alignItems: 'center',
+            gap: '0.8rem'
           }}
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          {/* Mobile Language Switcher (Icon-only e.g. EN) */}
+          <div ref={mobileDropdownRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => setMobileLangDropdownOpen(!mobileLangDropdownOpen)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: scrolled ? 'var(--bg-secondary)' : 'rgba(253, 252, 247, 0.5)',
+                color: 'var(--text-primary)',
+                border: '1px solid var(--border)',
+                width: '34px',
+                height: '34px',
+                borderRadius: '50%',
+                fontFamily: 'var(--font-sans)',
+                fontWeight: 800,
+                fontSize: '0.75rem',
+                cursor: 'pointer',
+                textTransform: 'uppercase',
+                outline: 'none',
+                transition: 'var(--transition-fast)'
+              }}
+            >
+              {language}
+            </button>
+            {mobileLangDropdownOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '120%',
+                  right: 0,
+                  backgroundColor: 'var(--bg-primary)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '12px',
+                  boxShadow: 'var(--shadow-md)',
+                  padding: '0.4rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.2rem',
+                  minWidth: '110px',
+                  zIndex: 1001,
+                  animation: 'fadeIn 0.2s ease-out'
+                }}
+              >
+                {Object.keys(flags).map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => {
+                      setLanguage(lang);
+                      setMobileLangDropdownOpen(false);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.4rem 0.6rem',
+                      width: '100%',
+                      border: 'none',
+                      background: language === lang ? 'var(--bg-secondary)' : 'transparent',
+                      color: 'var(--text-primary)',
+                      fontFamily: 'var(--font-sans)',
+                      fontSize: '0.8rem',
+                      fontWeight: language === lang ? 700 : 500,
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    <span>{flags[lang]}</span>
+                    <span style={{ textTransform: 'uppercase' }}>{lang}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <button
+            className="mobile-toggle"
+            onClick={() => setIsOpen(!isOpen)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--text-primary)',
+              display: 'block',
+              padding: 0
+            }}
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer menu */}
@@ -566,13 +786,13 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
           from { opacity: 0; transform: translateY(4px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        @media (max-width: 1024px) {
+        @media (max-width: 820px) {
           .desktop-links-menu,
           .desktop-actions-menu {
             display: none !important;
           }
-          .mobile-toggle {
-            display: block !important;
+          .mobile-actions-wrapper {
+            display: flex !important;
           }
         }
       `}</style>

@@ -60,6 +60,7 @@ export default function Blog() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [reelHover, setReelHover] = useState(false);
   const [reelTilt, setReelTilt] = useState({});
+  const [phoneTilt, setPhoneTilt] = useState({});
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
   const categories = ['ALL', 'SMM', 'MARKETING', 'DESIGN'];
@@ -175,7 +176,18 @@ export default function Blog() {
 
     setReelTilt({
       transform: `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`,
-      boxShadow: '0 20px 45px rgba(242, 183, 5, 0.06), var(--shadow-lg)'
+      boxShadow: '0 20px 40px rgba(242, 183, 5, 0.12), 0 0 35px rgba(217, 61, 61, 0.15)' // Ambient dominant color glow (yellow/red)
+    });
+
+    // Independent phone container tilt (4-5 degrees max at edges)
+    const phoneRotateX = -y * 0.045;
+    const phoneRotateY = x * 0.045;
+    const shadowX = -x * 0.08;
+    const shadowY = -y * 0.08;
+
+    setPhoneTilt({
+      transform: `perspective(1000px) rotateX(${phoneRotateX}deg) rotateY(${phoneRotateY}deg) scale(1.035)`,
+      boxShadow: `${shadowX}px ${shadowY}px 25px rgba(0, 0, 0, 0.35)`
     });
   };
 
@@ -185,6 +197,42 @@ export default function Blog() {
       transform: 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0px)',
       boxShadow: 'none'
     });
+    setPhoneTilt({
+      transform: 'none',
+      boxShadow: 'var(--shadow-lg)'
+    });
+  };
+
+  const handleWatchClick = (e) => {
+    const btn = e.currentTarget;
+    const ripple = document.createElement('span');
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    ripple.style.position = 'absolute';
+    ripple.style.width = '100px';
+    ripple.style.height = '100px';
+    ripple.style.background = 'rgba(255, 255, 255, 0.4)';
+    ripple.style.borderRadius = '50%';
+    ripple.style.pointerEvents = 'none';
+    ripple.style.left = `${x - 50}px`;
+    ripple.style.top = `${y - 50}px`;
+    ripple.style.transform = 'scale(0)';
+    ripple.style.transition = 'transform 0.6s ease-out, opacity 0.6s ease-out';
+    ripple.style.opacity = '1';
+    
+    btn.appendChild(ripple);
+    
+    // Force reflow
+    void ripple.offsetWidth;
+    
+    ripple.style.transform = 'scale(3)';
+    ripple.style.opacity = '0';
+    
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
   };
 
   return (
@@ -398,12 +446,15 @@ export default function Blog() {
               href="https://www.instagram.com/p/DX_it9uA_fo/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="btn-primary"
+              className="btn-primary btn-watch-reel" 
+              onClick={handleWatchClick}
               style={{ 
                 backgroundColor: 'var(--accent)', 
                 color: '#1E2022', 
                 textDecoration: 'none',
-                boxShadow: '0 4px 15px rgba(242, 183, 5, 0.3)'
+                boxShadow: '0 4px 15px rgba(242, 183, 5, 0.3)',
+                position: 'relative',
+                overflow: 'hidden'
               }}
             >
               {t('blog.btnWatch')} <InstagramIcon size={18} />
@@ -421,10 +472,11 @@ export default function Blog() {
               width: '100%',
               margin: '0 auto',
               border: '4px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: 'var(--shadow-lg)',
               backgroundColor: '#2A2D30',
               clipPath: 'inset(0% 0% 0% 0% round 30px)',
-              zIndex: 2
+              zIndex: 2,
+              transition: 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.15s',
+              ...phoneTilt
             }}
           >
             {/* The Heartbeat Synced Video */}

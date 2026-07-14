@@ -19,8 +19,24 @@ export default function HeroSection({ onOpenBonus }) {
   const isAttractedToNavbar = useRef(false);
   const wordCenter = useRef({ x: 0, y: 0 });
   const particlesArray = useRef([]);
+  const underlinePathRef = useRef(null);
 
   const { t, language } = useLanguage();
+
+  const triggerPulseUnderline = () => {
+    const path = underlinePathRef.current;
+    if (!path) return;
+    
+    // Create an EKG heartbeat wave that moves left-to-right on the underline path
+    const tl = gsap.timeline();
+    tl.to(path, { attr: { d: "M 0 5 H 10 L 15 1 L 20 9 L 25 5 H 100" }, duration: 0.1, ease: "power1.inOut" })
+      .to(path, { attr: { d: "M 0 5 H 25 L 30 1 L 35 9 L 40 5 H 100" }, duration: 0.1, ease: "power1.inOut" })
+      .to(path, { attr: { d: "M 0 5 H 42 L 47 1 L 52 9 L 57 5 H 100" }, duration: 0.1, ease: "power1.inOut" })
+      .to(path, { attr: { d: "M 0 5 H 60 L 65 1 L 70 9 L 75 5 H 100" }, duration: 0.1, ease: "power1.inOut" })
+      .to(path, { attr: { d: "M 0 5 H 78 L 83 1 L 88 9 L 93 5 H 100" }, duration: 0.1, ease: "power1.inOut" })
+      .to(path, { attr: { d: "M 0 5 H 90 L 93 1 L 96 9 L 99 5 H 100" }, duration: 0.1, ease: "power1.inOut" })
+      .to(path, { attr: { d: "M 0 5 H 100" }, duration: 0.15, ease: "power2.out" });
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,7 +45,8 @@ export default function HeroSection({ onOpenBonus }) {
     
     // Populate particles container
     const particles = [];
-    const count = 180; // Increase count for a denser, more organic cloud!
+    const isMobileDevice = window.innerWidth < 820;
+    const count = isMobileDevice ? 38 : 180;
     particlesArray.current = particles;
 
     // Set up canvas sizing
@@ -119,9 +136,11 @@ export default function HeroSection({ onOpenBonus }) {
     }
 
     // Animation Loop
+    let time = 0;
     let animFrameId;
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      time += 0.015;
       
       // Get title bounding box to calculate text ricochet
       const titleEl = titleRef.current;
@@ -137,11 +156,22 @@ export default function HeroSection({ onOpenBonus }) {
         };
       }
 
+      const isMobileDevice = window.innerWidth < 820;
+
+      // 8-second organic breathing cycle (4s squeeze, 4s expand)
+      const breathingFactor = 1 + Math.sin(time * (Math.PI / 4)) * 0.06;
+
       particles.forEach((p, idx) => {
         // 1. Idle Float
         p.angle += p.speed;
         const driftX = Math.sin(p.angle) * 6;
         const driftY = Math.cos(p.angle) * 6;
+
+        // Apply breathing factor to home coordinates
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const homeX = centerX + (p.origX - centerX) * breathingFactor;
+        const homeY = centerY + (p.origY - centerY) * breathingFactor;
 
         if (isAttractedToWord.current) {
           // 2. High-speed flow towards the center of the accent word
@@ -149,43 +179,39 @@ export default function HeroSection({ onOpenBonus }) {
           const dy = wordCenter.current.y - p.y;
           p.vx += dx * 0.16;
           p.vy += dy * 0.16;
-        } else if (isAttractedToNavbar.current) {
+        } else if (isAttractedToNavbar.current && !isMobileDevice) {
           // 3. Flow behind the Navbar Capsule Menu creating a glowing, fluffy halo cloud
-          // Distribute particles randomly inside a horizontal capsule boundary:
-          // Horizontal spread from -280px to +280px (fully covers the bento pill navbar!)
           const spreadX = Math.cos(idx * 7) * 280;
-          // Vertical spread from -20px to +20px around the navbar capsule center (approx y = 38px)
           const spreadY = Math.sin(idx * 13) * 20;
           const targetX = canvas.width / 2 + spreadX;
-          const targetY = 38 + spreadY + Math.sin(p.angle * 2) * 8; // gentle organic breathing drift!
+          const targetY = 38 + spreadY + Math.sin(p.angle * 2) * 8;
           
           const dx = targetX - p.x;
           const dy = targetY - p.y;
-          p.vx += dx * 0.15; // Stronger attraction pull
+          p.vx += dx * 0.15;
           p.vy += dy * 0.15;
-        } else if (mouse.active) {
+        } else if (mouse.active && !isMobileDevice) {
           // 4. Magnetic Pulse: Settle as a halo outline around the mouse cursor
           const dx = p.x - mouse.x;
           const dy = p.y - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 150) {
+          if (dist < 120) {
             // Settle on a circular path around the mouse
             const theta = Math.atan2(dy, dx);
-            const targetX = mouse.x + Math.cos(theta) * 85;
-            const targetY = mouse.y + Math.sin(theta) * 85;
+            const targetX = mouse.x + Math.cos(theta) * 65;
+            const targetY = mouse.y + Math.sin(theta) * 65;
 
             p.vx += (targetX - p.x) * 0.12;
             p.vy += (targetY - p.y) * 0.12;
           } else {
-            // Settle back to original positions
-            p.vx += (p.origX + driftX - p.x) * 0.03;
-            p.vy += (p.origY + driftY - p.y) * 0.03;
+            p.vx += (homeX + driftX - p.x) * 0.03;
+            p.vy += (homeY + driftY - p.y) * 0.03;
           }
         } else {
-          // 5. Default state: return to original positions
-          p.vx += (p.origX + driftX - p.x) * 0.03;
-          p.vy += (p.origY + driftY - p.y) * 0.03;
+          // 5. Default state: return to home position (breathing!)
+          p.vx += (homeX + driftX - p.x) * 0.03;
+          p.vy += (homeY + driftY - p.y) * 0.03;
         }
 
         // Apply Damping and Update positions
@@ -320,6 +346,7 @@ export default function HeroSection({ onOpenBonus }) {
                     y: rect.top - canvasRect.top + rect.height / 2
                   };
                   e.currentTarget.classList.add('pulse-neon-flash');
+                  triggerPulseUnderline();
                 }}
                 onMouseLeave={(e) => {
                   isAttractedToWord.current = false;
@@ -339,7 +366,7 @@ export default function HeroSection({ onOpenBonus }) {
             </span>
             {/* Drawing cardiogram pulse underline */}
             <svg className="accent-word-underline-svg" viewBox="0 0 100 10" preserveAspectRatio="none">
-              <path className="accent-underline-path" d="M 0 5 H 40 L 45 1 L 50 9 L 55 5 H 100" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path ref={underlinePathRef} className="accent-underline-path" d="M 0 5 H 100" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </span>
           &nbsp;
@@ -465,7 +492,7 @@ export default function HeroSection({ onOpenBonus }) {
         <h1 
           ref={titleRef}
           style={{
-            fontSize: '3.8rem',
+            fontSize: 'clamp(42px, 8vw, 84px)',
             lineHeight: '1.15',
             fontFamily: 'var(--font-heading)',
             color: 'var(--text-primary)',
@@ -573,10 +600,22 @@ export default function HeroSection({ onOpenBonus }) {
       </a>
 
       <style>{`
-        @media (max-width: 768px) {
-          h1 {
-            font-size: 2.4rem !important;
-            line-height: 1.2 !important;
+        @media (max-width: 820px) {
+          .btn-liquid-fill, .btn-voltage-audit {
+            width: 100% !important;
+            height: 56px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 1.5rem !important;
+            box-sizing: border-box !important;
+            border-radius: 28px !important;
+          }
+          div[style*="marginTop: 1.5rem"] {
+            width: 100% !important;
+            padding: 0 1rem !important;
+            box-sizing: border-box !important;
+            flex-direction: column !important;
           }
         }
       `}</style>

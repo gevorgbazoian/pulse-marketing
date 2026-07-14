@@ -807,15 +807,20 @@ const ServiceCard = React.forwardRef(({ service, index, setHoveredIndex, isMobil
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
 
-    const rotateX = -y * 0.055;
-    const rotateY = x * 0.055;
-    const mx = x * 0.12;
-    const my = y * 0.12;
+    const is3D = service.originalIndex === 6;
+    const mult = is3D ? 1.7 : 1.0;
+
+    const rotateX = -y * 0.055 * mult;
+    const rotateY = x * 0.055 * mult;
+    const mx = x * 0.12 * mult;
+    const my = y * 0.12 * mult;
 
     setTiltStyle({
-      transform: "perspective(800px) rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) scale(1.03) translate3d(" + mx + "px, " + my + "px, 15px)",
+      transform: "perspective(800px) rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) scale(" + (is3D ? 1.06 : 1.03) + ") translate3d(" + mx + "px, " + my + "px, 20px) translateY(-8px)",
       borderColor: 'var(--accent)',
-      boxShadow: '0 15px 35px rgba(242, 183, 5, 0.15)'
+      boxShadow: is3D 
+        ? '0 25px 45px rgba(242, 183, 5, 0.22)' 
+        : '0 15px 35px rgba(242, 183, 5, 0.15)'
     });
   };
 
@@ -828,9 +833,13 @@ const ServiceCard = React.forwardRef(({ service, index, setHoveredIndex, isMobil
     setIsHovered(false);
     setHoveredIndex(null);
     setTiltStyle({
-      transform: 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1) translate3d(0, 0, 0)'
+      transform: 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1) translate3d(0, 0, 0) translateY(0px)'
     });
   };
+
+  const isSMM = service.originalIndex === 0;
+  const isTargeting = service.originalIndex === 1;
+  const isBranding = service.originalIndex === 2;
 
   return (
     <div
@@ -846,11 +855,65 @@ const ServiceCard = React.forwardRef(({ service, index, setHoveredIndex, isMobil
         gap: '1.2rem',
         cursor: 'default',
         opacity: 0,
+        position: 'relative',
+        overflow: 'hidden',
         ...tiltStyle
       }}
     >
       {/* Glare Sheen sweep */}
       <span className="service-card-sheen" />
+
+      {/* SMM Backdrop Pulse */}
+      {isHovered && isSMM && (
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            zIndex: 1,
+            animation: 'pulse-bg-glow 1.2s infinite ease-in-out'
+          }}
+        />
+      )}
+
+      {/* Targeting Backdrop Radar */}
+      {isHovered && isTargeting && (
+        <div 
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: '200px',
+            height: '200px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(242,183,5,0.15) 0%, transparent 70%)',
+            pointerEvents: 'none',
+            zIndex: 1,
+            transform: 'translate(-50%, -50%)',
+            animation: 'radar-sweep-anim 2.5s linear infinite'
+          }}
+        />
+      )}
+
+      {/* Branding Backdrop Liquid */}
+      {isBranding && (
+        <span 
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            height: isHovered ? '100%' : '0%',
+            backgroundColor: 'rgba(242, 183, 5, 0.06)',
+            transition: 'height 0.5s cubic-bezier(0.25, 1, 0.3, 1)',
+            pointerEvents: 'none',
+            zIndex: 1
+          }}
+        />
+      )}
 
       {/* Floating Icon Wrapper (Pop & Spin 360deg rotation on hover) */}
       <div 
@@ -867,14 +930,16 @@ const ServiceCard = React.forwardRef(({ service, index, setHoveredIndex, isMobil
           transform: isHovered ? 'translateZ(25px) scale(1.22) rotate(360deg)' : 'translateZ(0) scale(1) rotate(0)',
           boxShadow: isHovered ? '0 8px 18px rgba(242, 183, 5, 0.18)' : 'none',
           willChange: 'transform',
-          flexShrink: 0
+          flexShrink: 0,
+          position: 'relative',
+          zIndex: 2
         }}
       >
         {service.icon}
       </div>
 
       {/* Title & Short Description */}
-      <div style={{ transform: isHovered ? 'translateZ(10px)' : 'translateZ(0)', transition: 'transform 0.4s' }}>
+      <div style={{ transform: isHovered ? 'translateZ(10px)' : 'translateZ(0)', transition: 'transform 0.4s', position: 'relative', zIndex: 2 }}>
         <h3 style={{ 
           fontSize: '1.05rem', 
           color: 'var(--text-primary)', 

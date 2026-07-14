@@ -91,81 +91,49 @@ export default function IntroAnimation({ onRenderSite, onComplete }) {
 
       // 1. ECG Heartbeat drawing loop with physical thump beats
       
-      // Stage 1: Draw Flat 1 baseline (Slow)
+      // Stage 1: Flatline (0.0s - 0.6s)
       tl.to(path, {
         strokeDashoffset: pathLength * 0.748,
-        duration: 0.5,
-        ease: 'power1.in'
+        duration: 0.6,
+        ease: 'none'
       });
       
-      // Stage 2: Spike UP to (235, 40) (First Heartbeat thump!)
+      // Stage 2: First beat spike (0.6s - 0.9s)
       tl.to(path, {
         strokeDashoffset: pathLength * 0.656,
-        duration: 0.15,
+        duration: 0.1,
         ease: 'power2.out',
-        onStart: () => triggerFlash(0.06)
+        onStart: () => triggerFlash(0.04) // Very light screen flash
       });
       
-      // Stage 3: Spike DOWN to (255, 160) (Second thump!)
       tl.to(path, {
         strokeDashoffset: pathLength * 0.475,
-        duration: 0.18,
-        ease: 'power2.inOut',
-        onStart: () => triggerFlash(0.08)
+        duration: 0.1,
+        ease: 'power2.inOut'
       });
       
-      // Stage 4: Recover to baseline (275, 100)
       tl.to(path, {
         strokeDashoffset: pathLength * 0.382,
-        duration: 0.12,
+        duration: 0.1,
         ease: 'power2.out'
       });
       
-      // Stage 5: Draw Flat 2 to x=295
-      tl.to(path, {
-        strokeDashoffset: pathLength * 0.352,
-        duration: 0.06,
-        ease: 'none'
-      });
-      
-      // Stage 6: Dip DOWN to (310, 125)
-      tl.to(path, {
-        strokeDashoffset: pathLength * 0.309,
-        duration: 0.06,
-        ease: 'power1.in'
-      });
-      
-      // Stage 7: Dip UP to (325, 75) (Third thump!)
-      tl.to(path, {
-        strokeDashoffset: pathLength * 0.232,
-        duration: 0.06,
-        ease: 'power2.out',
-        onStart: () => triggerFlash(0.05)
-      });
-      
-      // Stage 8: Recover to baseline (340, 100)
-      tl.to(path, {
-        strokeDashoffset: pathLength * 0.189,
-        duration: 0.05,
-        ease: 'power1.in'
-      });
-      
-      // Stage 9: Draw Flat 3 to x=375
+      // Stage 3: Flat baseline to spike start (0.9s - 1.3s)
       tl.to(path, {
         strokeDashoffset: pathLength * 0.137,
-        duration: 0.05,
+        duration: 0.4,
         ease: 'none'
       });
       
-      // Stage 10: Final massive spike to APEX at (400, 10) (Apex explosion thump!)
+      // Stage 4: Apex spike (1.3s - 1.4s)
       tl.to(path, {
         strokeDashoffset: 0,
-        duration: 0.08,
+        duration: 0.1,
         ease: 'power4.out',
-        onStart: () => triggerFlash(0.12)
+        onStart: () => triggerFlash(0.06)
       });
 
-      // 2. Yellow flying dot emerges at the Apex
+      // 2. Yellow flying dot emerges at the Apex (1.4s)
       tl.to(flyingDot, {
         x: 400,
         y: 10,
@@ -174,104 +142,98 @@ export default function IntroAnimation({ onRenderSite, onComplete }) {
       
       tl.to(flyingDot, {
         opacity: 1,
-        duration: 0.35,
+        duration: 0.1,
         ease: 'power2.out'
       });
 
-      // 3. Typography Reveal Sweep: Flying dot sweeps right, writing the brand name
-      // Dot moves from 400 to 780
+      // 3. Typography Reveal Sweep (1.5s - 2.3s)
       tl.to(flyingDot, {
         x: 780,
         y: 18,
-        duration: 1.1,
+        duration: 0.8,
         ease: 'power2.inOut'
       }, 'sweep');
 
-      // Staggered typewriter bounce entrance for all letters
-      // Reveal P path
+      // Staggered typewriter reveal for letters
       tl.to(letterP, {
         opacity: 1,
-        duration: 0.2,
+        duration: 0.15,
         ease: 'power2.out'
-      }, 'sweep+=0.15');
+      }, 'sweep');
 
-      // Stagger remaining letters "U L S E M A R K E T I N G"
       tl.to(activeLetters, {
         opacity: 1,
         scale: 1,
         y: 0,
-        stagger: 0.055,
+        stagger: 0.04,
         duration: 0.35,
-        ease: 'back.out(1.8)'
-      }, 'sweep+=0.2');
+        ease: 'back.out(1.5)'
+      }, 'sweep+=0.05');
 
-      // Add explicit climax label to prevent timing overlapping bugs
-      tl.addLabel('climax', 'sweep+=1.75');
-
-      // 4. The Grand Climax: Yellow flying dot shoots back to the stem bottom
+      // 4. Dot Return (2.3s - 2.6s)
       tl.to(flyingDot, {
         x: 430.9,
         y: 31.5,
         attr: { r: 3.5 },
-        duration: 0.55,
+        duration: 0.3,
         ease: 'power3.inOut'
       }, 'climax');
 
       // Fade out remaining letters and red ECG path
       tl.to([remainingLettersGroup, path], {
         opacity: 0,
-        duration: 0.35,
+        duration: 0.25,
         ease: 'power2.out'
-      }, 'climax+=0.1');
+      }, 'climax');
 
-      // 5. Perform the Flip at the end of the climax animation
+      // 5. Perform the Flip/Logo lock (2.6s)
       tl.to(flyingDot, {
         opacity: 0,
         duration: 0
-      }, 'climax+=0.55');
+      }, 'lock');
 
       tl.to(innerDot, {
         opacity: 1,
         duration: 0
-      }, 'climax+=0.55');
+      }, 'lock');
 
-      // 6. Draw the Rounded Gradient Circle Frame around P + Dot
+      // Draw the Rounded Gradient Circle Frame
       tl.to(logoFrame, {
         opacity: 1,
         strokeDashoffset: 0,
-        duration: 0.85,
+        duration: 0.4,
         ease: 'power2.inOut'
-      }, 'climax+=0.55');
+      }, 'lock');
 
-      // 7. Preloader Grand Exit: Scale up logo group and fade out
+      // 6. Preloader Grand Exit: Dissolve to hero
       tl.to(logoGroup, {
         scale: 3.5,
         opacity: 0,
-        duration: 0.75,
+        duration: 0.6,
         ease: 'power3.inOut'
-      }, '+=0.25');
+      }, 'lock+=0.4');
 
       // Render main site underneath
-      tl.call(() => onRenderSiteRef.current());
+      tl.call(() => onRenderSiteRef.current(), null, 'lock+=0.6');
 
       // Slide up the stacked curtains
       tl.to(whitePanel, {
         yPercent: -100,
-        duration: 0.8,
+        duration: 0.75,
         ease: 'power3.inOut'
-      }, 'curtainReveal');
+      }, 'lock+=0.6');
 
       tl.to(charcoalPanel, {
         yPercent: -100,
-        duration: 0.8,
+        duration: 0.75,
         ease: 'power3.inOut'
-      }, 'curtainReveal+=0.15');
+      }, 'lock+=0.75');
 
       tl.to(yellowPanel, {
         yPercent: -100,
-        duration: 0.8,
+        duration: 0.75,
         ease: 'power3.inOut'
-      }, 'curtainReveal+=0.3');
+      }, 'lock+=0.9');
     });
 
     return () => {
@@ -392,7 +354,8 @@ export default function IntroAnimation({ onRenderSite, onComplete }) {
                 r="3.5"
                 fill="#F2B705"
                 style={{ 
-                  filter: 'drop-shadow(0px 2px 8px rgba(242, 183, 5, 0.6))'
+                  filter: 'drop-shadow(0px 2px 8px rgba(242, 183, 5, 0.6))',
+                  mixBlendMode: 'multiply'
                 }}
               />
 
@@ -403,7 +366,7 @@ export default function IntroAnimation({ onRenderSite, onComplete }) {
                 cy="0"
                 r="12"
                 fill="#F2B705"
-                style={{ filter: 'drop-shadow(0px 2px 8px rgba(242, 183, 5, 0.6))' }}
+                style={{ filter: 'drop-shadow(0px 2px 8px rgba(242, 183, 5, 0.6))', mixBlendMode: 'multiply' }}
               />
             </g>
 

@@ -13,8 +13,18 @@ function VitalCounter({ targetValue, suffix = '', label, duration = 1200 }) {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
       
-      // Easing out quadratic
-      const easedProgress = progress * (2 - progress);
+      // Elastic overshoot and settle ease curve
+      let easedProgress;
+      if (progress < 1) {
+        // overshoot up to ~1.12, then settle back to 1.0
+        const p = progress;
+        easedProgress = p < 0.7 
+          ? (p / 0.7) * 1.12 
+          : 1.12 - ((p - 0.7) / 0.3) * 0.12;
+      } else {
+        easedProgress = 1;
+      }
+      
       const val = Math.floor(easedProgress * targetValue);
       setCount(val);
 
@@ -234,22 +244,26 @@ export default function DetailedResults({ onGoBack }) {
     hy: {
       back: 'ՀԵՏ ԴԵՊԻ ԳԼԽԱՎՈՐ',
       sub: 'ԱՐԴՅՈՒՆԱՎԵՏՈՒԹՅԱՆ ՑՈՒՑԱՆԻՇՆԵՐ',
-      main: 'ՄԵՐ ԱՇԽԱՏԱՆՔՆԵՐԸ'
+      main: 'ՄԵՐ ԱՇԽԱՏԱՆՔՆԵՐԸ',
+      showroom: 'Performance Showroom'
     },
     en: {
       back: 'BACK TO HOME',
       sub: 'PERFORMANCE INDICATORS',
-      main: 'OUR WORKS'
+      main: 'OUR WORKS',
+      showroom: 'Performance Showroom'
     },
     ru: {
       back: 'НАЗАД НА ГЛАВНУЮ',
       sub: 'ПОКАЗАТЕЛИ ЭФФЕКТИВНОСТИ',
-      main: 'НАШИ РАБОТЫ'
+      main: 'НАШИ РАБОТЫ',
+      showroom: 'Performance Showroom'
     }
   }[language] || {
     back: 'BACK TO HOME',
     sub: 'PERFORMANCE INDICATORS',
-    main: 'OUR WORKS'
+    main: 'OUR WORKS',
+    showroom: 'Performance Showroom'
   };
 
   const counters = {
@@ -522,7 +536,7 @@ export default function DetailedResults({ onGoBack }) {
               paddingBottom: '1rem'
             }}
           >
-            {t('results.showroomTitle') || 'ՔԵՅՍԵՐԻ ՑՈՒՑԱԴՐՈՒԹՅՈՒՆ'}
+            {localTexts.showroom}
           </h2>
 
           <div

@@ -47,32 +47,15 @@ export default function AIChatbot() {
   };
 
   return (
-    <div style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 999 }}>
+    <div className="chatbot-toggle-btn-container" style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 999 }}>
       {/* Floating Chat Button */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="pulse-glow"
-          style={{
-            width: '60px',
-            height: '60px',
-            borderRadius: '50%',
-            backgroundColor: '#212224',
-            color: '#FDFCF7',
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            boxShadow: 'var(--shadow-lg)',
-            transition: 'var(--transition-smooth)',
-            position: 'relative'
-          }}
-          onMouseEnter={(e) => e.target.style.transform = 'scale(1.08) translateY(-4px)'}
-          onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+          className="chatbot-toggle-btn"
         >
-          <span className="chat-ripple" />
-          <MessageSquare size={26} className="chat-widget-icon" />
+          <span className="chat-ripple" style={{ animationDuration: '6s' }} />
+          <MessageSquare size={24} className="chat-widget-icon" />
         </button>
       )}
 
@@ -281,6 +264,75 @@ export default function AIChatbot() {
       )}
 
       <style>{`
+        .chatbot-toggle-btn {
+          width: 68px;
+          height: 68px;
+          border-radius: 50%;
+          background-color: #212224;
+          color: #FDFCF7;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+          position: relative;
+          transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          padding: 0;
+        }
+
+        /* Thinner outer ring / ripple */
+        .chatbot-toggle-btn::after {
+          content: '';
+          position: absolute;
+          top: -4px;
+          left: -4px;
+          right: -4px;
+          bottom: -4px;
+          border-radius: 50%;
+          border: 1px solid rgba(242, 183, 5, 0.45);
+          pointer-events: none;
+          animation: chatbot-ring-pulse 3.5s infinite ease-in-out;
+          transition: all 0.5s ease;
+        }
+
+        @keyframes chatbot-ring-pulse {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.8;
+          }
+          50% {
+            transform: scale(1.08);
+            opacity: 0.35;
+            border-color: rgba(217, 61, 61, 0.6);
+          }
+        }
+
+        .chatbot-toggle-btn:hover {
+          transform: scale(1.06) translateY(-4px);
+          background-color: var(--accent) !important;
+          color: #212224 !important;
+        }
+
+        .chatbot-toggle-btn:hover .chat-widget-icon {
+          transform: rotate(15deg) scale(1.1);
+        }
+
+        .chatbot-toggle-btn .chat-widget-icon {
+          transition: transform 0.4s ease;
+        }
+
+        @media (max-width: 820px) {
+          .chatbot-toggle-btn {
+            width: 64px !important;
+            height: 64px !important;
+          }
+          .chatbot-toggle-btn-container {
+            bottom: 1.5rem !important;
+            right: 1.5rem !important;
+          }
+        }
+
         @keyframes slideUp {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
