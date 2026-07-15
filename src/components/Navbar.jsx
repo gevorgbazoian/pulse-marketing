@@ -38,6 +38,9 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const isDarkTheme = currentPage !== 'home' || !scrolled;
+  const themeClass = isDarkTheme ? 'theme-dark' : 'theme-light';
+
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
@@ -245,14 +248,12 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
         <a 
           href="#" 
           onClick={onLogoClick}
-          className="logo-anchor"
+          className={`logo-anchor ${themeClass}`}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.4rem',
             textDecoration: 'none',
-            color: '#FAF6F1',
-            filter: 'drop-shadow(0 0 10px rgba(255, 204, 0, 0.4))',
             fontFamily: 'var(--font-heading)',
             fontWeight: 900,
             fontSize: '1.4rem',
@@ -289,7 +290,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
               <span className="logo-orbit-particle p3" />
             </span>
           </span>
-          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#FAF6F1', opacity: 0.85, marginLeft: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', textShadow: '0 0 8px rgba(250, 246, 241, 0.25)' }}>Marketing</span>
+          <span className="logo-marketing" style={{ fontSize: '0.8rem', fontWeight: 600, marginLeft: '4px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Marketing</span>
         </a>
 
         {/* Desktop Navigation Links Container (Centered Pill) */}

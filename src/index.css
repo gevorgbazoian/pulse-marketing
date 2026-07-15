@@ -1665,8 +1665,8 @@ div[onMouseMove]:hover .reel-card-sheen {
   opacity: 1;
 }
 .hero-service-card.card-cgi:hover {
-  border-color: rgba(46, 204, 113, 0.35) !important;
-  box-shadow: 0 20px 40px rgba(46, 204, 113, 0.1) !important;
+  border-color: rgba(46, 204, 113, 0.8) !important;
+  box-shadow: 0 0 35px rgba(46, 204, 113, 0.35) !important;
   transform: translateY(-8px);
 }
 
@@ -1695,6 +1695,9 @@ div[onMouseMove]:hover .reel-card-sheen {
 .hero-service-card:hover .card-visual-img {
   transform: translateY(-15px) rotate(2.5deg) scale(1.05);
   filter: drop-shadow(0 20px 25px rgba(0,0,0,0.45));
+}
+.hero-service-card.card-cgi:hover .card-visual-img {
+  filter: drop-shadow(0 0 25px rgba(46, 204, 113, 0.6)) !important;
 }
 
 /* Brighten text on hover */
@@ -1838,5 +1841,32 @@ div[onMouseMove]:hover .reel-card-sheen {
   100% {
     transform: translate(-50%, -50%) rotateX(-70deg) rotateY(-20deg) rotateZ(-360deg);
   }
+}
+
+/* Dynamic Navbar Logo Theme Classes */
+.logo-anchor.theme-dark {
+  color: #FAF6F1 !important;
+  filter: drop-shadow(0 0 10px rgba(255, 204, 0, 0.4)) !important;
+  transition: color 0.3s ease, filter 0.3s ease;
+}
+
+.logo-anchor.theme-dark .logo-marketing {
+  color: #FAF6F1 !important;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 8px rgba(250, 246, 241, 0.25)) !important;
+  transition: color 0.3s ease, filter 0.3s ease;
+}
+
+.logo-anchor.theme-light {
+  color: #0F172A !important;
+  filter: none !important;
+  transition: color 0.3s ease, filter 0.3s ease;
+}
+
+.logo-anchor.theme-light .logo-marketing {
+  color: #0F172A !important;
+  opacity: 0.7;
+  filter: none !important;
+  transition: color 0.3s ease, filter 0.3s ease;
 }
 

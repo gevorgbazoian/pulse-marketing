@@ -167,7 +167,7 @@ export default function Results() {
         activeShockwavesRef.current = liveShockwaves;
       }
 
-      ctx.strokeStyle = 'rgba(33, 34, 36, 0.038)';
+      ctx.strokeStyle = 'rgba(15, 23, 42, 0.08)';
       ctx.lineWidth = 1;
 
       // Draw horizontal distorted lines ("Live Water" Visualizer)
@@ -311,19 +311,23 @@ export default function Results() {
   };
 
   // Trigger Shockwave ripple starting from stat card center
-  const triggerHoverShockwave = (e) => {
+  const triggerHoverShockwave = (e, index) => {
     if (!canvasRef.current) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const canvasRect = canvasRef.current.getBoundingClientRect();
     const cx = rect.left - canvasRect.left + rect.width / 2;
     const cy = rect.top - canvasRect.top + rect.height / 2;
 
+    const colors = ['#2ECC71', '#FF3333', '#FFCC00', '#0077B6'];
+    const color = colors[index] || '#FFCC00';
+
     const newShockwave = {
       id: Date.now() + Math.random(),
       x: cx,
       y: cy,
       radius: 10,
-      opacity: 1
+      opacity: 1,
+      color: color
     };
 
     activeShockwavesRef.current.push(newShockwave);
@@ -416,7 +420,13 @@ export default function Results() {
         <span 
           key={sw.id} 
           className="results-shockwave-ring" 
-          style={{ left: sw.x, top: sw.y }} 
+          style={{ 
+            left: sw.x, 
+            top: sw.y, 
+            borderColor: sw.color,
+            boxShadow: `0 0 15px ${sw.color}`,
+            filter: `drop-shadow(0 0 10px ${sw.color})`
+          }} 
         />
       ))}
 
@@ -505,7 +515,7 @@ export default function Results() {
                 hasPulse={hasPulse}
                 counterCompleted={counterCompleted}
                 cardClass={cardClass}
-                onMouseEnter={triggerHoverShockwave}
+                onMouseEnter={(e) => triggerHoverShockwave(e, i)}
               />
             );
           })}
