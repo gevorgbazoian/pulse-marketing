@@ -251,7 +251,8 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
             alignItems: 'center',
             gap: '0.4rem',
             textDecoration: 'none',
-            color: 'var(--text-primary)',
+            color: '#FAF6F1',
+            textShadow: '0 0 10px rgba(250, 246, 241, 0.35)',
             fontFamily: 'var(--font-heading)',
             fontWeight: 900,
             fontSize: '1.4rem',
@@ -288,7 +289,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
               <span className="logo-orbit-particle p3" />
             </span>
           </span>
-          <span style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--text-secondary)', marginLeft: '4px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Marketing</span>
+          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#FAF6F1', opacity: 0.85, marginLeft: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', textShadow: '0 0 8px rgba(250, 246, 241, 0.25)' }}>Marketing</span>
         </a>
 
         {/* Desktop Navigation Links Container (Centered Pill) */}

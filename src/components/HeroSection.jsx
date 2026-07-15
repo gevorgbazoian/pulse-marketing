@@ -391,7 +391,7 @@ export default function HeroSection({ onOpenBonus }) {
         textAlign: 'center',
         padding: '8rem 2rem 4rem',
         position: 'relative',
-        backgroundColor: '#121314',
+        backgroundColor: '#000000',
         overflow: 'hidden'
       }}
     >
