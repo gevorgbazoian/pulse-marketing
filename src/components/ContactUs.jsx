@@ -121,7 +121,7 @@ export default function ContactUs() {
           width: '100%',
           height: '100%',
           zIndex: 0,
-          opacity: 0.08,
+          opacity: 0.24,
           pointerEvents: 'none',
           overflow: 'hidden'
         }}
@@ -316,8 +316,8 @@ export default function ContactUs() {
               ) : (
                 <div 
                   style={{
-                    backgroundColor: 'rgba(56, 161, 105, 0.1)',
-                    color: '#38A169',
+                    backgroundColor: 'rgba(46, 204, 113, 0.12)',
+                    color: '#2ECC71',
                     padding: '1.5rem',
                     borderRadius: '12px',
                     textAlign: 'center',

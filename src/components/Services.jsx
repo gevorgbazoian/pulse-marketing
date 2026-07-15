@@ -532,47 +532,38 @@ export default function Services() {
                 position: 'relative'
               }}
             >
-              {/* Expanding Ripple Rings (Always active when Core is revealed) */}
+              {/* Heart SVG Ripples */}
               {isCoreActive && (
                 <>
-                  <div className="core-node-ripple core-node-ripple-1" />
-                  <div className="core-node-ripple core-node-ripple-2" />
+                  <svg className="heart-ripple-node heart-ripple-1" viewBox="0 0 24 24" fill="none" stroke="#D93D3D" strokeWidth="0.5">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                  <svg className="heart-ripple-node heart-ripple-2" viewBox="0 0 24 24" fill="none" stroke="#D93D3D" strokeWidth="0.5">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
                 </>
               )}
 
+              {/* Pulsing SVG Heart Core Node */}
               <div 
                 ref={coreRef}
-                className="core-node-outer"
+                className="heart-pulse-wrapper"
                 style={{
-                  width: '90px',
-                  height: '90px',
-                  padding: '6px',
+                  width: '96px',
+                  height: '96px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  position: 'relative',
+                  zIndex: 5,
                   transition: 'transform 0.4s ease',
-                  backgroundColor: 'rgba(242, 183, 5, 0.04)',
-                  zIndex: 5
+                  cursor: 'pointer'
                 }}
               >
-                <div 
-                  className="core-node-inner"
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#ffffff',
-                    fontWeight: 900,
-                    fontSize: '0.8rem',
-                    letterSpacing: '0.12em',
-                    fontFamily: 'var(--font-heading)',
-                    textShadow: '0 0 10px rgba(255,255,255,0.8)'
-                  }}
-                >
-                  PULSE
-                </div>
+                <svg className="w-full h-full" viewBox="0 0 24 24" fill="var(--pulse-red)" style={{ width: '100%', height: '100%', filter: 'drop-shadow(0 0 10px rgba(217, 61, 61, 0.4))' }}>
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  <text x="12" y="11.8" fill="#FFFFFF" fontSize="3.1" fontWeight="900" fontFamily="var(--font-heading)" textAnchor="middle" letterSpacing="0.02em">PULSE</text>
+                </svg>
               </div>
             </div>
 

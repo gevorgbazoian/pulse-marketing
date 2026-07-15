@@ -105,7 +105,7 @@ export default function AIChatbot() {
               <div>
                 <div style={{ fontWeight: 700, fontSize: '0.9rem', fontFamily: 'var(--font-heading)' }}>Pulse Assistant</div>
                 <div style={{ fontSize: '0.7rem', color: '#A0A5AA', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: '6px', height: '6px', backgroundColor: '#38A169', borderRadius: '50%' }} />
+                  <span style={{ width: '6px', height: '6px', backgroundColor: '#2ECC71', borderRadius: '50%', boxShadow: '0 0 6px #2ECC71' }} />
                   {t('chatbot.status')}
                 </div>
               </div>

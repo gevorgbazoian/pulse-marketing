@@ -496,6 +496,7 @@ export default function Results() {
         >
           {stats.map((stat, i) => {
             const hasPulse = pulseBeat > 0 && pulseBeat < 5;
+            const cardClass = ['card-green', 'card-red', 'card-yellow', 'card-blue'][i] || '';
             return (
               <StatCard 
                 key={i}
@@ -503,6 +504,7 @@ export default function Results() {
                 label={stat.label}
                 hasPulse={hasPulse}
                 counterCompleted={counterCompleted}
+                cardClass={cardClass}
                 onMouseEnter={triggerHoverShockwave}
               />
             );
@@ -561,12 +563,12 @@ export default function Results() {
   );
 }
 
-function StatCard({ value, label, hasPulse, counterCompleted, onMouseEnter }) {
+function StatCard({ value, label, hasPulse, counterCompleted, cardClass, onMouseEnter }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
-      className={`stat-card-snap ${hasPulse ? 'stat-card-heartbeat' : ''}`}
+      className={`stat-card-snap ${cardClass} ${hasPulse ? 'stat-card-heartbeat' : ''}`}
       onMouseEnter={(e) => {
         setIsHovered(true);
         onMouseEnter(e);
@@ -605,11 +607,12 @@ function StatCard({ value, label, hasPulse, counterCompleted, onMouseEnter }) {
         />
       )}
       <div 
+        className="stat-value"
         style={{ 
           fontFamily: 'var(--font-heading)', 
           fontWeight: 900, 
           fontSize: 'clamp(1.35rem, 4.8vw, 2.4rem)', 
-          color: isHovered ? 'var(--accent)' : 'var(--text-primary)',
+          color: 'var(--text-primary)',
           marginBottom: '0.5rem',
           lineHeight: '1.1',
           transition: 'color 0.3s ease',
@@ -619,7 +622,17 @@ function StatCard({ value, label, hasPulse, counterCompleted, onMouseEnter }) {
       >
         {value}
       </div>
-      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600, position: 'relative', zIndex: 2 }}>
+      <div 
+        className="stat-label"
+        style={{ 
+          fontSize: '0.85rem', 
+          color: 'var(--text-secondary)', 
+          fontWeight: 600, 
+          position: 'relative', 
+          zIndex: 2,
+          transition: 'color 0.3s ease'
+        }}
+      >
         {label}
       </div>
     </div>
@@ -745,7 +758,7 @@ function CaseCard({ cs, index, isShaking }) {
               gap: '0.5rem', 
               fontSize: '0.9rem', 
               fontWeight: 700,
-              color: isHovered ? 'var(--accent)' : 'var(--text-primary)',
+              color: isHovered ? '#2ECC71' : 'var(--text-primary)',
               transition: 'color 0.3s ease'
             }}
           >

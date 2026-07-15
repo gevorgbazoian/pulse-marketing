@@ -69,7 +69,7 @@ export default function HeroSection({ onOpenBonus }) {
             vx: 0,
             vy: 0,
             size: Math.random() * 1.8 + 1.2, // sizes between 1.2px and 3px
-            color: Math.random() > 0.4 ? 'rgba(33, 34, 36, 0.28)' : 'rgba(242, 183, 5, 0.55)',
+            color: Math.random() > 0.4 ? 'rgba(253, 252, 247, 0.28)' : 'rgba(242, 183, 5, 0.65)',
             angle: Math.random() * Math.PI * 2,
             speed: Math.random() * 0.02 + 0.008
           });
@@ -391,7 +391,7 @@ export default function HeroSection({ onOpenBonus }) {
         textAlign: 'center',
         padding: '8rem 2rem 4rem',
         position: 'relative',
-        backgroundColor: 'var(--bg-primary)',
+        backgroundColor: '#121314',
         overflow: 'hidden'
       }}
     >
@@ -463,10 +463,10 @@ export default function HeroSection({ onOpenBonus }) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.6rem',
-            backgroundColor: 'var(--bg-secondary)',
+            backgroundColor: '#212224',
             padding: '0.5rem 1.2rem',
             borderRadius: '50px',
-            border: '1px solid var(--border)'
+            border: '1px solid rgba(255, 255, 255, 0.1)'
           }}
         >
           <span style={{ position: 'relative', display: 'flex', width: '8px', height: '8px' }}>
@@ -480,7 +480,7 @@ export default function HeroSection({ onOpenBonus }) {
               fontWeight: 800, 
               fontSize: '0.75rem', 
               letterSpacing: '0.15em', 
-              color: 'var(--text-primary)',
+              color: '#FDFCF7',
               textTransform: 'uppercase'
             }}
           >
@@ -495,7 +495,7 @@ export default function HeroSection({ onOpenBonus }) {
             fontSize: 'clamp(42px, 8vw, 84px)',
             lineHeight: '1.15',
             fontFamily: 'var(--font-heading)',
-            color: 'var(--text-primary)',
+            color: '#FDFCF7',
             maxWidth: '780px'
           }}
         >
@@ -509,7 +509,7 @@ export default function HeroSection({ onOpenBonus }) {
               style={{
                 fontFamily: 'var(--font-sans)',
                 fontSize: '1.15rem',
-                color: 'var(--text-secondary)',
+                color: '#A0A5AA',
                 lineHeight: '1.7'
               }}
             >
@@ -519,7 +519,7 @@ export default function HeroSection({ onOpenBonus }) {
               style={{
                 fontFamily: 'var(--font-sans)',
                 fontSize: '0.95rem',
-                color: 'var(--text-secondary)',
+                color: '#A0A5AA',
                 marginTop: '0.8rem',
                 fontStyle: 'italic'
               }}
@@ -533,7 +533,7 @@ export default function HeroSection({ onOpenBonus }) {
               style={{
                 fontFamily: 'var(--font-sans)',
                 fontSize: '1.05rem',
-                color: 'var(--text-secondary)',
+                color: '#A0A5AA',
                 lineHeight: '1.5'
               }}
             >

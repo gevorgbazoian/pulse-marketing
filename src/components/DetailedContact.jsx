@@ -382,9 +382,9 @@ export default function DetailedContact({ onGoBack }) {
               animation: 'fadeInUp 0.6s ease-out'
             }}
           >
-            <CheckCircle size={56} color="var(--accent)" style={{ filter: 'drop-shadow(0 0 12px var(--accent))' }} />
+            <CheckCircle size={56} color="#2ECC71" style={{ filter: 'drop-shadow(0 0 12px #2ECC71)' }} />
             
-            <h3 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#FDFCF7', fontFamily: 'var(--font-heading)' }}>
+            <h3 style={{ fontSize: '1.6rem', fontWeight: 900, color: '#2ECC71', fontFamily: 'var(--font-heading)' }}>
               {localTexts.success}
             </h3>
             

@@ -751,6 +751,73 @@ section {
   }
 }
 
+/* Stats Card Snap Radial Expansion Hovers */
+.stat-card-snap {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.stat-card-snap::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.6s cubic-bezier(0.1, 0.8, 0.3, 1);
+  z-index: 1;
+}
+
+/* Green Card Hover */
+.stat-card-snap.card-green:hover::before {
+  background: radial-gradient(circle, #A8E6CF 0%, #1D8A5E 100%) !important;
+  transform: translate(-50%, -50%) scale(70) !important;
+}
+.stat-card-snap.card-green:hover {
+  border-color: #1D8A5E !important;
+  box-shadow: 0 15px 35px rgba(29, 138, 94, 0.35) !important;
+}
+
+/* Red Card Hover */
+.stat-card-snap.card-red:hover::before {
+  background: radial-gradient(circle, #FF8B94 0%, #E02424 100%) !important;
+  transform: translate(-50%, -50%) scale(70) !important;
+}
+.stat-card-snap.card-red:hover {
+  border-color: #E02424 !important;
+  box-shadow: 0 15px 35px rgba(224, 36, 36, 0.35) !important;
+}
+
+/* Yellow Card Hover */
+.stat-card-snap.card-yellow:hover::before {
+  background: radial-gradient(circle, #FFEAA7 0%, #D97706 100%) !important;
+  transform: translate(-50%, -50%) scale(70) !important;
+}
+.stat-card-snap.card-yellow:hover {
+  border-color: #D97706 !important;
+  box-shadow: 0 15px 35px rgba(217, 119, 6, 0.35) !important;
+}
+
+/* Blue Card Hover */
+.stat-card-snap.card-blue:hover::before {
+  background: radial-gradient(circle, #90E0EF 0%, #0077B6 100%) !important;
+  transform: translate(-50%, -50%) scale(70) !important;
+}
+.stat-card-snap.card-blue:hover {
+  border-color: #0077B6 !important;
+  box-shadow: 0 15px 35px rgba(0, 119, 182, 0.35) !important;
+}
+
+/* Text color transition on hover */
+.stat-card-snap:hover .stat-value,
+.stat-card-snap:hover .stat-label {
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.15) !important;
+}
+
 .stat-card-heartbeat {
   animation: stat-card-heartbeat-anim 0.35s ease-out;
 }
@@ -767,7 +834,7 @@ section {
   transform: translateY(-5px);
 }
 .case-card-snap:hover .results-growth-indicator svg {
-  filter: drop-shadow(0 0 3px var(--accent));
+  filter: drop-shadow(0 0 3px #2ECC71);
 }
 
 /* Services Crystal Diamond Grid Styles */
@@ -957,44 +1024,37 @@ section {
 }
 
 /* Core Ripple Rings representing pulse beats */
-.core-node-ripple {
+.heart-ripple-node {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(242, 183, 5, 0.45);
+  width: 96px;
+  height: 96px;
   transform: translate(-50%, -50%) scale(1);
   opacity: 0;
   pointer-events: none;
-  z-index: 2;
+  z-index: 1;
 }
 
-.core-node-ripple-1 {
-  animation: core-ripple-anim 3.5s cubic-bezier(0.1, 0.8, 0.2, 1) infinite;
+.heart-ripple-1 {
+  animation: heart-ripple-ping-anim 2.2s cubic-bezier(0.1, 0.8, 0.2, 1) infinite;
 }
 
-.core-node-ripple-2 {
-  animation: core-ripple-anim 3.5s cubic-bezier(0.1, 0.8, 0.2, 1) infinite;
-  animation-delay: 1.75s;
+.heart-ripple-2 {
+  animation: heart-ripple-ping-anim 2.2s cubic-bezier(0.1, 0.8, 0.2, 1) infinite;
+  animation-delay: 1.1s;
 }
 
-@keyframes core-ripple-anim {
+@keyframes heart-ripple-ping-anim {
   0% {
     transform: translate(-50%, -50%) scale(1);
     opacity: 0.8;
-    border-color: rgba(242, 183, 5, 0.65);
-    box-shadow: 0 0 10px rgba(242, 183, 5, 0.2);
-  }
-  50% {
-    border-color: rgba(242, 183, 5, 0.3);
+    filter: drop-shadow(0 0 4px rgba(217, 61, 61, 0.5));
   }
   100% {
-    transform: translate(-50%, -50%) scale(2.8);
+    transform: translate(-50%, -50%) scale(2.5);
     opacity: 0;
-    border-color: rgba(242, 183, 5, 0);
-    box-shadow: none;
+    filter: drop-shadow(0 0 16px rgba(217, 61, 61, 0));
   }
 }
 
