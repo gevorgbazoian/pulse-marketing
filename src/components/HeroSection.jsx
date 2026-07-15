@@ -575,6 +575,68 @@ export default function HeroSection({ onOpenBonus }) {
         </div>
       </div>
 
+      {/* 3-Column Services Interactive Grid */}
+      <div 
+        className="hero-services-grid"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '2rem',
+          width: '100%',
+          maxWidth: '1200px',
+          margin: '3.5rem auto 1.5rem',
+          padding: '0 1.5rem',
+          zIndex: 2,
+          position: 'relative',
+          boxSizing: 'border-box'
+        }}
+      >
+        {/* Card 1: SMM */}
+        <div className="hero-service-card card-smm">
+          <div className="card-visual-wrapper">
+            <img src="/smm_card.png" alt="SMM" className="card-visual-img" />
+          </div>
+          <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
+              {t('hero.grid.smmTitle')}
+            </h3>
+            <p style={{ fontSize: '0.82rem', color: '#A0A5AA', lineHeight: '1.45', margin: 0, fontFamily: 'var(--font-sans)', transition: 'color 0.3s ease' }}>
+              {t('hero.grid.smmDesc')}
+            </p>
+          </div>
+        </div>
+
+        {/* Card 2: Branding */}
+        <div className="hero-service-card card-branding">
+          <div className="card-visual-wrapper">
+            <img src="/branding_card.png" alt="Branding" className="card-visual-img" />
+          </div>
+          <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
+              {t('hero.grid.brandingTitle')}
+            </h3>
+            <p style={{ fontSize: '0.82rem', color: '#A0A5AA', lineHeight: '1.45', margin: 0, fontFamily: 'var(--font-sans)', transition: 'color 0.3s ease' }}>
+              {t('hero.grid.brandingDesc')}
+            </p>
+          </div>
+        </div>
+
+        {/* Card 3: CGI */}
+        <div className="hero-service-card card-cgi">
+          <div className="card-visual-wrapper">
+            <img src="/cgi_card.png" alt="CGI" className="card-visual-img" />
+          </div>
+          <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
+              {t('hero.grid.cgiTitle')}
+            </h3>
+            <p style={{ fontSize: '0.82rem', color: '#A0A5AA', lineHeight: '1.45', margin: 0, fontFamily: 'var(--font-sans)', transition: 'color 0.3s ease' }}>
+              {t('hero.grid.cgiDesc')}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Down arrow link with Double-Tap Pulse Loop */}
       <a 
         href="#partners" 

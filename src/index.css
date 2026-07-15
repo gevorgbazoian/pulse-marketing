@@ -1624,3 +1624,109 @@ div[onMouseMove]:hover .reel-card-sheen {
   100% { transform: scale(1.8); opacity: 0; }
 }
 
+/* Interactive Services Grid under Hero */
+.hero-service-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 2.2rem 1.8rem;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, box-shadow 0.4s;
+  box-sizing: border-box;
+  text-align: center;
+  z-index: 1;
+}
+
+.hero-service-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 24px;
+}
+
+/* SMM Card Hover */
+.hero-service-card.card-smm:hover::after {
+  background: radial-gradient(circle at center, rgba(217, 61, 61, 0.12) 0%, transparent 70%);
+  opacity: 1;
+}
+.hero-service-card.card-smm:hover {
+  border-color: rgba(217, 61, 61, 0.35) !important;
+  box-shadow: 0 20px 40px rgba(217, 61, 61, 0.1) !important;
+  transform: translateY(-8px);
+}
+
+/* Branding Card Hover */
+.hero-service-card.card-branding:hover::after {
+  background: radial-gradient(circle at center, rgba(242, 183, 5, 0.12) 0%, transparent 70%);
+  opacity: 1;
+}
+.hero-service-card.card-branding:hover {
+  border-color: rgba(242, 183, 5, 0.35) !important;
+  box-shadow: 0 20px 40px rgba(242, 183, 5, 0.1) !important;
+  transform: translateY(-8px);
+}
+
+/* CGI Card Hover */
+.hero-service-card.card-cgi:hover::after {
+  background: radial-gradient(circle at center, rgba(46, 204, 113, 0.12) 0%, transparent 70%);
+  opacity: 1;
+}
+.hero-service-card.card-cgi:hover {
+  border-color: rgba(46, 204, 113, 0.35) !important;
+  box-shadow: 0 20px 40px rgba(46, 204, 113, 0.1) !important;
+  transform: translateY(-8px);
+}
+
+/* Visual Mockups Floating effects */
+.card-visual-wrapper {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  overflow: visible;
+  z-index: 2;
+}
+
+.card-visual-img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s;
+  will-change: transform, filter;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+}
+
+.hero-service-card:hover .card-visual-img {
+  transform: translateY(-15px) rotate(2.5deg) scale(1.05);
+  filter: drop-shadow(0 20px 25px rgba(0,0,0,0.45));
+}
+
+/* Brighten text on hover */
+.hero-service-card:hover h3 {
+  color: #FFFFFF !important;
+}
+.hero-service-card:hover p {
+  color: #FFFFFF !important;
+}
+
+/* Mobile Scroll Arrow adjust */
+@media (max-width: 820px) {
+  .hero-scroll-arrow {
+    position: relative !important;
+    bottom: auto !important;
+    margin-top: 3.5rem !important;
+    margin-bottom: 2rem !important;
+  }
+}
+

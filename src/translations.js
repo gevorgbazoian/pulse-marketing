@@ -17,7 +17,15 @@ export const translations = {
       descShort: "Մենք հզորացնում ենք Ձեր բրենդի թվային զարկերը առաջադեմ SMM-ի, թիրախավորման և մինիմալ բրենդինգի միջոցով: Երևանյան գործակալություն՝ վստահված 100+ հաճախորդների կողմից:",
       btnServices: "ԾԱՌԱՅՈՒԹՅՈՒՆՆԵՐ",
       btnAudit: "ԱՆՎՃԱՐ ԱՈՒԴԻՏ",
-      scroll: "ՍԿՍԵԼ ԴԻՏՈՒՄԸ"
+      scroll: "ՍԿՍԵԼ ԴԻՏՈՒՄԸ",
+      grid: {
+        smmTitle: "Սոցցանցերի առաջխաղացում (SMM)",
+        smmDesc: "Սոցցանցերի առաջխաղացում և կրեատիվ կոնտենտի ստեղծում",
+        brandingTitle: "Բրենդինգ (Branding)",
+        brandingDesc: "Լոգո, բրենդբուք և կորպորատիվ ոճի ստեղծում",
+        cgiTitle: "3D & Motion (CGI)",
+        cgiDesc: "Աչք շոյող 3D մոդելավորում և Motion դիզայն"
+      }
     },
     partners: {
       title: "ՄԵՐ ԳՈՐԾԸՆԿԵՐՆԵՐԸ",
@@ -289,7 +297,15 @@ export const translations = {
       descShort: "We empower your brand's digital pulse with cutting-edge SMM, targeting, and minimal branding. Yerevan-based agency trusted by 100+ clients.",
       btnServices: "SERVICES",
       btnAudit: "FREE AUDIT",
-      scroll: "START TOUR"
+      scroll: "START TOUR",
+      grid: {
+        smmTitle: "Social Media Marketing (SMM)",
+        smmDesc: "Social media growth and creative content creation",
+        brandingTitle: "Branding & Identity",
+        brandingDesc: "Logo, brandbook, and corporate style design",
+        cgiTitle: "3D & Motion (CGI)",
+        cgiDesc: "Eye-catching 3D modeling and motion design"
+      }
     },
     partners: {
       title: "OUR PARTNERS",
@@ -561,7 +577,15 @@ export const translations = {
       descShort: "Мы усиливаем цифровой пульс вашего бренда с помощью передового SMM, таргетинга и минималистичного брендинга. Ереванское агентство, которому доверяют более 100 клиентов.",
       btnServices: "УСЛУГИ",
       btnAudit: "БЕСПЛАТНЫЙ АУДИТ",
-      scroll: "НАЧАТЬ ОБЗОР"
+      scroll: "НАЧАТЬ ОБЗОР",
+      grid: {
+        smmTitle: "Продвижение в соцсетях (SMM)",
+        smmDesc: "Продвижение в соцсетях и создание креативного контента",
+        brandingTitle: "Брендинг (Branding)",
+        brandingDesc: "Создание логотипа, брендбука и фирменного стиля",
+        cgiTitle: "3D и Motion дизайн (CGI)",
+        cgiDesc: "Впечатляющее 3D-моделирование и моушн-дизайн"
+      }
     },
     partners: {
       title: "НАШИ ПАРТНЕРЫ",
