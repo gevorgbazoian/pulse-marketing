@@ -190,11 +190,11 @@ function PulseTunnelTransition({ target, coords, onComplete, changePage }) {
             ref={ekgPathRef}
             d="M 0 40 H 120 L 130 15 L 140 65 L 150 40 H 300" 
             fill="none" 
-            stroke="var(--accent)" 
+            stroke="#FF3333" 
             strokeWidth="3.2" 
             strokeLinecap="round"
             style={{
-              filter: 'drop-shadow(0 0 8px var(--accent))'
+              filter: 'drop-shadow(0 0 8px #FF3333)'
             }}
           />
         </svg>
