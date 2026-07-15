@@ -252,7 +252,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
             gap: '0.4rem',
             textDecoration: 'none',
             color: '#FAF6F1',
-            textShadow: '0 0 10px rgba(250, 246, 241, 0.35)',
+            filter: 'drop-shadow(0 0 10px rgba(255, 204, 0, 0.4))',
             fontFamily: 'var(--font-heading)',
             fontWeight: 900,
             fontSize: '1.4rem',

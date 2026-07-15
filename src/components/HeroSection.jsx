@@ -595,6 +595,10 @@ export default function HeroSection({ onOpenBonus }) {
         <div className="hero-service-card card-smm">
           <div className="card-visual-wrapper">
             <img src="/smm_card.png" alt="SMM" className="card-visual-img" />
+            <span className="floating-heart fh1">❤️</span>
+            <span className="floating-like fl1">👍</span>
+            <span className="floating-heart fh2">❤️</span>
+            <span className="floating-like fl2">🔥</span>
           </div>
           <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
             <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
@@ -610,6 +614,7 @@ export default function HeroSection({ onOpenBonus }) {
         <div className="hero-service-card card-branding">
           <div className="card-visual-wrapper">
             <img src="/branding_card.png" alt="Branding" className="card-visual-img" />
+            <div className="branding-laser-line" />
           </div>
           <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
             <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
@@ -625,6 +630,8 @@ export default function HeroSection({ onOpenBonus }) {
         <div className="hero-service-card card-cgi">
           <div className="card-visual-wrapper">
             <img src="/cgi_card.png" alt="CGI" className="card-visual-img" />
+            <div className="orbiting-ring or1" />
+            <div className="orbiting-ring or2" />
           </div>
           <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
             <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>

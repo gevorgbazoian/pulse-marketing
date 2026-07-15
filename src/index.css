@@ -763,44 +763,37 @@ section {
   z-index: 1;
 }
 
-/* Green Card Hover */
-.stat-card-snap.card-green:hover::before {
-  background: radial-gradient(circle, #A8E6CF 0%, #1D8A5E 100%) !important;
-  transform: translate(-50%, -50%) scale(70) !important;
+/* Color Variables for each card category */
+.stat-card-snap.card-green {
+  --hover-glow: radial-gradient(circle, #A8E6CF 0%, #1D8A5E 100%);
+  --card-border: #1D8A5E;
+  --card-shadow: rgba(29, 138, 94, 0.35);
 }
-.stat-card-snap.card-green:hover {
-  border-color: #1D8A5E !important;
-  box-shadow: 0 15px 35px rgba(29, 138, 94, 0.35) !important;
+.stat-card-snap.card-red {
+  --hover-glow: radial-gradient(circle, #FF8B94 0%, #E02424 100%);
+  --card-border: #E02424;
+  --card-shadow: rgba(224, 36, 36, 0.35);
 }
-
-/* Red Card Hover */
-.stat-card-snap.card-red:hover::before {
-  background: radial-gradient(circle, #FF8B94 0%, #E02424 100%) !important;
-  transform: translate(-50%, -50%) scale(70) !important;
+.stat-card-snap.card-yellow {
+  --hover-glow: radial-gradient(circle, #FFEAA7 0%, #D97706 100%);
+  --card-border: #D97706;
+  --card-shadow: rgba(217, 119, 6, 0.35);
 }
-.stat-card-snap.card-red:hover {
-  border-color: #E02424 !important;
-  box-shadow: 0 15px 35px rgba(224, 36, 36, 0.35) !important;
-}
-
-/* Yellow Card Hover */
-.stat-card-snap.card-yellow:hover::before {
-  background: radial-gradient(circle, #FFEAA7 0%, #D97706 100%) !important;
-  transform: translate(-50%, -50%) scale(70) !important;
-}
-.stat-card-snap.card-yellow:hover {
-  border-color: #D97706 !important;
-  box-shadow: 0 15px 35px rgba(217, 119, 6, 0.35) !important;
+.stat-card-snap.card-blue {
+  --hover-glow: radial-gradient(circle, #90E0EF 0%, #0077B6 100%);
+  --card-border: #0077B6;
+  --card-shadow: rgba(0, 119, 182, 0.35);
 }
 
-/* Blue Card Hover */
-.stat-card-snap.card-blue:hover::before {
-  background: radial-gradient(circle, #90E0EF 0%, #0077B6 100%) !important;
-  transform: translate(-50%, -50%) scale(70) !important;
+/* Simplified unified hover transitions */
+.stat-card-snap:hover::before {
+  background: var(--hover-glow) !important;
+  transform: translate(-50%, -50%) scale(55) !important;
 }
-.stat-card-snap.card-blue:hover {
-  border-color: #0077B6 !important;
-  box-shadow: 0 15px 35px rgba(0, 119, 182, 0.35) !important;
+
+.stat-card-snap:hover {
+  border-color: var(--card-border) !important;
+  box-shadow: 0 15px 35px var(--card-shadow) !important;
 }
 
 /* Text color transition on hover */
@@ -1719,6 +1712,131 @@ div[onMouseMove]:hover .reel-card-sheen {
     bottom: auto !important;
     margin-top: 3.5rem !important;
     margin-bottom: 2rem !important;
+  }
+}
+
+/* SMM Card Floating Particles Hover */
+.hero-service-card.card-smm .floating-heart,
+.hero-service-card.card-smm .floating-like {
+  position: absolute;
+  bottom: 20%;
+  font-size: 1.2rem;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.hero-service-card.card-smm:hover .fh1 {
+  animation: float-up-particle 1.6s ease-out infinite;
+  left: 25%;
+}
+.hero-service-card.card-smm:hover .fl1 {
+  animation: float-up-particle 1.6s ease-out infinite 0.4s;
+  left: 45%;
+}
+.hero-service-card.card-smm:hover .fh2 {
+  animation: float-up-particle 1.6s ease-out infinite 0.8s;
+  left: 65%;
+}
+.hero-service-card.card-smm:hover .fl2 {
+  animation: float-up-particle 1.6s ease-out infinite 1.2s;
+  left: 35%;
+}
+
+@keyframes float-up-particle {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px) scale(1.1) rotate(15deg);
+    opacity: 0;
+  }
+}
+
+/* Branding Card Holographic Scan laser line */
+.branding-laser-line {
+  position: absolute;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #FFCC00, transparent);
+  box-shadow: 0 0 10px #FFCC00, 0 0 20px #FFCC00;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+  top: 15%;
+}
+.hero-service-card.card-branding:hover .branding-laser-line {
+  animation: holographic-scan-anim 2s linear infinite;
+}
+
+@keyframes holographic-scan-anim {
+  0% {
+    top: 15%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 85%;
+    opacity: 0;
+  }
+}
+
+/* 3D/CGI Orbiting Rings */
+.orbiting-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1.5px solid rgba(46, 204, 113, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: 1;
+}
+.orbiting-ring.or1 {
+  width: 140px;
+  height: 40px;
+  transform: translate(-50%, -50%) rotateX(75deg) rotateY(15deg);
+}
+.orbiting-ring.or2 {
+  width: 160px;
+  height: 45px;
+  transform: translate(-50%, -50%) rotateX(-70deg) rotateY(-20deg);
+}
+.hero-service-card.card-cgi:hover .orbiting-ring {
+  opacity: 1;
+}
+.hero-service-card.card-cgi:hover .or1 {
+  animation: orbit-rotate-1 3s linear infinite;
+}
+.hero-service-card.card-cgi:hover .or2 {
+  animation: orbit-rotate-2 3.5s linear infinite;
+}
+
+@keyframes orbit-rotate-1 {
+  0% {
+    transform: translate(-50%, -50%) rotateX(75deg) rotateY(15deg) rotateZ(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotateX(75deg) rotateY(15deg) rotateZ(360deg);
+  }
+}
+@keyframes orbit-rotate-2 {
+  0% {
+    transform: translate(-50%, -50%) rotateX(-70deg) rotateY(-20deg) rotateZ(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotateX(-70deg) rotateY(-20deg) rotateZ(-360deg);
   }
 }
 
