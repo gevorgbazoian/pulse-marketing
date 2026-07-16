@@ -439,21 +439,21 @@ export default function HeroSection({ onOpenBonus }) {
       // Snap brackets from off-screen
       const brackets = card.querySelectorAll('.card-corner-bracket');
       brackets.forEach((bracket) => {
-        let startX = 0, startY = 0, startRot = 0;
+        let startX = '0px', startY = '0px', startRot = 0;
         
         if (bracket.classList.contains('top-left')) {
-          startX = -80; startY = -80; startRot = -90;
+          startX = '-15vw'; startY = '-15vh'; startRot = -90;
         } else if (bracket.classList.contains('top-right')) {
-          startX = 80; startY = -80; startRot = 90;
+          startX = '15vw'; startY = '-15vh'; startRot = 90;
         } else if (bracket.classList.contains('bottom-left')) {
-          startX = -80; startY = 80; startRot = -180;
+          startX = '-15vw'; startY = '15vh'; startRot = -180;
         } else if (bracket.classList.contains('bottom-right')) {
-          startX = 80; startY = 80; startRot = 180;
+          startX = '15vw'; startY = '15vh'; startRot = 180;
         }
 
         gsap.fromTo(bracket,
           { x: startX, y: startY, rotation: startRot, opacity: 0 },
-          { x: 0, y: 0, rotation: 0, opacity: 1, duration: 0.85, delay: delay, ease: 'back.out(2)' }
+          { x: '0px', y: '0px', rotation: 0, opacity: 1, duration: 0.85, delay: delay, ease: 'back.out(2)' }
         );
       });
 
@@ -617,15 +617,13 @@ export default function HeroSection({ onOpenBonus }) {
       id="hero"
       data-theme="dark"
       style={{
-        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         padding: '6rem 2rem 2.5rem',
         position: 'relative',
-        backgroundColor: '#000000',
-        overflow: 'hidden'
+        backgroundColor: '#000000'
       }}
     >
       {/* Background Soft Fluid Lighting (The Pulse Aura) */}
@@ -679,12 +677,25 @@ export default function HeroSection({ onOpenBonus }) {
       />
 
       <style>{`
-        @media (max-width: 1024px) {
+        #hero {
+          height: 100vh;
+          min-height: 750px;
+          overflow: hidden;
+          box-sizing: border-box;
+        }
+        @media (max-width: 1024px), (max-height: 760px) {
+          #hero {
+            height: auto !important;
+            min-height: 100vh !important;
+            overflow: visible !important;
+            padding-top: 6.5rem !important;
+            padding-bottom: 3.5rem !important;
+          }
           .hero-inner-container {
             flex-direction: column !important;
             align-items: center !important;
             text-align: center !important;
-            padding-top: 2rem !important;
+            padding-top: 1rem !important;
             gap: 2.5rem !important;
           }
           .hero-left-column {
@@ -693,7 +704,7 @@ export default function HeroSection({ onOpenBonus }) {
             max-width: 100% !important;
           }
           .hero-left-column h1 {
-            font-size: clamp(32px, 6vw, 46px) !important;
+            font-size: clamp(30px, 5.5vw, 44px) !important;
           }
           .hero-right-column {
             width: 100% !important;
