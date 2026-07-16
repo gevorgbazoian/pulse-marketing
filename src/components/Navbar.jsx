@@ -38,8 +38,35 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isDarkTheme = currentPage !== 'home' || !scrolled;
-  const themeClass = isDarkTheme ? 'theme-dark' : 'theme-light';
+  const [activeTheme, setActiveTheme] = useState('dark');
+
+  useEffect(() => {
+    if (currentPage !== 'home') {
+      setActiveTheme('dark');
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const sectionTheme = entry.target.getAttribute('data-theme') || 'dark';
+          setActiveTheme(sectionTheme);
+        }
+      });
+    }, {
+      rootMargin: '-80px 0px -80% 0px',
+      threshold: 0
+    });
+
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => observer.observe(section));
+
+    return () => {
+      sections.forEach(section => observer.unobserve(section));
+    };
+  }, [currentPage]);
+
+  const themeClass = activeTheme === 'light' ? 'theme-light' : 'theme-dark';
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -214,7 +241,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
 
   return (
     <nav 
-      className="fixed top-0 left-0 w-full z-50"
+      className={`navbar fixed top-0 left-0 w-full z-50 ${themeClass} ${scrolled ? 'scrolled' : 'not-scrolled'}`}
       style={{
         position: 'fixed',
         top: 0,
@@ -222,12 +249,12 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
         width: '100%',
         zIndex: 1000,
         transition: 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
-        backgroundColor: scrolled ? 'rgba(253, 252, 247, 0.85)' : 'transparent',
+        backgroundColor: !scrolled ? 'transparent' : (activeTheme === 'light' ? 'rgba(253, 252, 247, 0.85)' : 'rgba(15, 15, 17, 0.85)'),
         backdropFilter: scrolled ? 'blur(10px)' : 'none',
-        borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
+        borderBottom: !scrolled ? '1px solid transparent' : (activeTheme === 'light' ? '1px solid var(--border)' : '1px solid rgba(255, 255, 255, 0.08)'),
         boxShadow: scrolled 
-          ? (shrunk ? '0 10px 30px rgba(33, 34, 36, 0.08)' : '0 6px 20px rgba(33, 34, 36, 0.04)')
-          : '0 4px 25px rgba(33, 34, 36, 0.025)',
+          ? (shrunk ? '0 10px 30px rgba(0, 0, 0, 0.15)' : '0 6px 20px rgba(0, 0, 0, 0.08)')
+          : 'none',
         padding: shrunk
           ? '0.6rem clamp(1rem, 2.5vw, 2rem)'
           : (scrolled ? '1.1rem clamp(1rem, 2.5vw, 2rem)' : '1.5rem clamp(1rem, 2.5vw, 2rem)')
@@ -467,6 +494,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
           <div ref={dropdownRef} style={{ position: 'relative' }}>
             <button
               onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+              className="lang-dropdown-btn"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -587,6 +615,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
           <div ref={mobileDropdownRef} style={{ position: 'relative' }}>
             <button
               onClick={() => setMobileLangDropdownOpen(!mobileLangDropdownOpen)}
+              className="lang-dropdown-btn"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',

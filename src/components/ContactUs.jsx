@@ -104,6 +104,7 @@ export default function ContactUs() {
     <section 
       ref={sectionRef}
       id="contact-us" 
+      data-theme="light" 
       style={{ 
         backgroundColor: 'var(--bg-secondary)', 
         borderTop: '1px solid var(--border)',
@@ -120,8 +121,7 @@ export default function ContactUs() {
           left: 0,
           width: '100%',
           height: '100%',
-          zIndex: 0,
-          opacity: 0.24,
+          opacity: 0.72,
           pointerEvents: 'none',
           overflow: 'hidden'
         }}
@@ -131,7 +131,7 @@ export default function ContactUs() {
             className="contact-bg-lifeline"
             d="M 0 150 H 300 L 320 50 L 340 350 L 360 200 L 380 150 H 700 L 720 50 L 740 350 L 760 200 L 780 150 H 1000"
             fill="none"
-            stroke="var(--pulse-red)"
+            stroke="rgba(255, 51, 51, 0.08)"
             strokeWidth="2"
           />
           <path
@@ -139,7 +139,7 @@ export default function ContactUs() {
             style={{ animationDelay: '-12s' }}
             d="M 0 250 H 150 L 170 120 L 190 380 L 210 280 L 230 250 H 550 L 570 120 L 590 380 L 610 280 L 630 250 H 1000"
             fill="none"
-            stroke="var(--accent)"
+            stroke="rgba(255, 204, 0, 0.12)"
             strokeWidth="1.5"
           />
         </svg>

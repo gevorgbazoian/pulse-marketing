@@ -239,6 +239,7 @@ export default function Blog() {
     <section 
       ref={sectionRef}
       id="blog" 
+      data-theme="dark" 
       style={{
         position: 'relative',
         padding: windowWidth < 480 ? '5rem 1rem' : '8rem 2rem',

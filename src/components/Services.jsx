@@ -294,6 +294,7 @@ export default function Services() {
     <section 
       ref={sectionRef}
       id="services"
+      data-theme="light"
       style={{
         backgroundColor: 'var(--bg-secondary)',
         borderTop: '1px solid var(--border)',

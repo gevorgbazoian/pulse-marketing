@@ -138,7 +138,7 @@ function PulseTunnelTransition({ target, coords, onComplete, changePage }) {
         left: 0,
         width: '100vw',
         height: '100vh',
-        backgroundColor: '#1E2022',
+        backgroundColor: '#0F0F11',
         zIndex: 999999,
         display: 'flex',
         justifyContent: 'center',
@@ -146,76 +146,78 @@ function PulseTunnelTransition({ target, coords, onComplete, changePage }) {
         pointerEvents: 'all'
       }}
     >
-      {/* Glow Backing with Screen Blend Mode */}
-      <div 
-        ref={glowRef}
-        className="radial-glow-back"
-        style={{
-          position: 'absolute',
-          width: '200px',
-          height: '200px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(242,183,5,0.45) 0%, transparent 70%)',
-          mixBlendMode: 'screen',
-          opacity: 0,
-          pointerEvents: 'none',
-          zIndex: 1
-        }}
-      />
+      <div style={{ position: 'relative', width: '320px', height: '320px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        
+        {/* Outer Thin Yellow Ring (Stays Yellow) */}
+        <svg 
+          ref={shockwaveRef}
+          style={{ position: 'absolute', width: '256px', height: '256px', overflow: 'visible', zIndex: 2, transformOrigin: 'center' }} 
+          viewBox="0 0 100 100"
+        >
+          <circle cx="50" cy="50" r="40" stroke="rgba(255, 204, 0, 0.2)" strokeWidth="1.2" fill="none" />
+        </svg>
 
-      {/* Shockwave Ring */}
-      <div 
-        ref={shockwaveRef}
-        className="shockwave-ring"
-        style={{
-          position: 'absolute',
-          width: '120px',
-          height: '120px',
-          borderRadius: '50%',
-          border: '2.5px solid var(--accent)',
-          opacity: 0,
-          pointerEvents: 'none',
-          zIndex: 2
-        }}
-      />
+        {/* Center Yellow Glow */}
+        <div 
+          ref={glowRef}
+          className="yellow-center-glow"
+          style={{
+            position: 'absolute',
+            width: '64px',
+            height: '64px',
+            borderRadius: '50%',
+            backgroundColor: '#FFCC00',
+            opacity: 0.25,
+            filter: 'blur(16px)',
+            zIndex: 1,
+            transformOrigin: 'center'
+          }}
+        />
 
-      {/* SVG EKG Laser Pass Line */}
-      <div style={{ position: 'absolute', width: '380px', height: '80px', zIndex: 3 }}>
-        <svg viewBox="0 0 300 80" style={{ width: '100%', height: '100%', display: 'block', overflow: 'visible' }}>
-          {/* Static subtle background path */}
-          <path d="M 0 40 H 120 L 130 15 L 140 65 L 150 40 H 300" fill="none" stroke="rgba(255, 255, 255, 0.03)" strokeWidth="2.5" />
-          
-          {/* Neon animated laser path */}
+        {/* EKG SVG with Red Line and Yellow Dot */}
+        <svg 
+          style={{ width: '100%', height: '100%', zIndex: 10, overflow: 'visible' }} 
+          viewBox="0 0 300 100" 
+          fill="none" 
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Static background line */}
+          <path 
+            d="M10,50 L120,50 L130,25 L140,75 L150,50 L290,50" 
+            fill="none" 
+            stroke="rgba(255, 255, 255, 0.03)" 
+            strokeWidth="3" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+          />
+
+          {/* 10/10 Red Heartbeat Line (Changed to Red!) */}
           <path 
             ref={ekgPathRef}
-            d="M 0 40 H 120 L 130 15 L 140 65 L 150 40 H 300" 
-            fill="none" 
+            className="ekg-laser-path" 
+            d="M10,50 L120,50 L130,25 L140,75 L150,50 L290,50" 
             stroke="#FF3333" 
-            strokeWidth="3.2" 
-            strokeLinecap="round"
+            strokeWidth="3" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
             style={{
               filter: 'drop-shadow(0 0 8px #FF3333)'
             }}
           />
+          
+          {/* Center Yellow Pulse Dot */}
+          <circle 
+            ref={dotRef}
+            className="yellow-center-dot" 
+            cx="150" 
+            cy="50" 
+            r="7.5" 
+            fill="#FFCC00" 
+            style={{ transformOrigin: '150px 50px' }}
+          />
         </svg>
+        
       </div>
-
-      {/* Yellow Center Dot */}
-      <div 
-        ref={dotRef}
-        className="yellow-center-dot"
-        style={{
-          width: '24px',
-          height: '24px',
-          backgroundColor: 'var(--accent)',
-          borderRadius: '50%',
-          boxShadow: '0 0 25px var(--accent)',
-          position: 'relative',
-          zIndex: 4,
-          transform: 'scale(1)',
-          filter: 'blur(0.2px)'
-        }}
-      />
     </div>
   );
 }

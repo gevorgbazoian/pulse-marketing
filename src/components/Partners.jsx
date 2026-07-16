@@ -309,6 +309,7 @@ export default function Partners({ onNavigate }) {
     <section 
       ref={sectionRef}
       id="partners"
+      data-theme="light"
       style={{
         backgroundColor: 'var(--bg-secondary)',
         borderTop: '1px solid var(--border)',

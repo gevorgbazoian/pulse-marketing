@@ -100,6 +100,7 @@ export default function AboutUs() {
     <section 
       ref={sectionRef} 
       id="about-us" 
+      data-theme="light" 
       style={{ 
         backgroundColor: 'var(--bg-primary)',
         position: 'relative',

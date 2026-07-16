@@ -392,6 +392,7 @@ export default function Results() {
     <section 
       ref={sectionRef}
       id="results" 
+      data-theme="light"
       className="heartbeat-grid-bg"
       onMouseMove={handleMouseMoveSection}
       style={{

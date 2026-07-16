@@ -382,6 +382,7 @@ export default function HeroSection({ onOpenBonus }) {
     <section 
       ref={heroRef}
       id="hero"
+      data-theme="dark"
       style={{
         minHeight: '100vh',
         display: 'flex',
@@ -562,14 +563,11 @@ export default function HeroSection({ onOpenBonus }) {
             <span className="btn-text-content">{t('hero.btnServices')}</span>
           </a>
 
-          {/* Free Audit: High-Voltage Cardiogram Stroke outline button */}
+          {/* Free Audit: Sleek Glassmorphic Outline Button */}
           <button 
             onClick={onOpenBonus} 
-            className="btn-voltage-audit"
+            className="btn-free-audit"
           >
-            <svg className="voltage-border-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <rect className="voltage-rect" x="0" y="0" width="100%" height="100%" rx="8" fill="none" stroke="rgba(33,34,36,0.12)" strokeWidth="1.5" />
-            </svg>
             <span>{t('hero.btnAudit')}</span>
           </button>
         </div>
@@ -599,6 +597,8 @@ export default function HeroSection({ onOpenBonus }) {
             <span className="floating-like fl1">👍</span>
             <span className="floating-heart fh2">❤️</span>
             <span className="floating-like fl2">🔥</span>
+            <span className="floating-pulse fp1">💛</span>
+            <span className="floating-pulse fp2">⚡</span>
           </div>
           <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
             <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
