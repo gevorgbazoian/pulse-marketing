@@ -38,6 +38,41 @@ export default function HeroSection({ onOpenBonus }) {
       .to(path, { attr: { d: "M 0 5 H 100" }, duration: 0.15, ease: "power2.out" });
   };
 
+  const handleMouseMoveSMM = (e) => {
+    if (Math.random() > 0.85) {
+      const card = e.currentTarget;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const symbols = ['❤️', '👍', '🔥', '✨', '💛', '⚡'];
+      const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+
+      const bubble = document.createElement('span');
+      bubble.innerText = symbol;
+      bubble.style.position = 'absolute';
+      bubble.style.left = `${x}px`;
+      bubble.style.top = `${y}px`;
+      bubble.style.fontSize = '18px';
+      bubble.style.pointerEvents = 'none';
+      bubble.style.zIndex = '10';
+      bubble.style.transition = 'all 1s cubic-bezier(0.1, 0.8, 0.3, 1)';
+      bubble.style.transform = 'translate(-50%, -50%) scale(0.5)';
+      bubble.style.opacity = '1';
+
+      card.appendChild(bubble);
+
+      setTimeout(() => {
+        bubble.style.transform = 'translate(-50%, -100px) scale(1.6) rotate(' + (Math.random() * 40 - 20) + 'deg)';
+        bubble.style.opacity = '0';
+      }, 50);
+
+      setTimeout(() => {
+        bubble.remove();
+      }, 1050);
+    }
+  };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -638,7 +673,7 @@ export default function HeroSection({ onOpenBonus }) {
             }}
           >
             {/* Card 1: SMM */}
-            <div className="hero-service-card card-smm">
+            <div className="hero-service-card card-smm" onMouseMove={handleMouseMoveSMM}>
               <div className="card-visual-wrapper">
                 <img src="/smm_card.png" alt="SMM" className="card-visual-img" />
                 <span className="floating-heart fh1">❤️</span>
