@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, Gift } from 'lucide-react';
 import { useLanguage } from '../LanguageContext';
+import gsap from 'gsap';
 
 export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPage }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +38,25 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      gsap.fromTo('.mobile-drawer-overlay',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.35, ease: 'power2.out' }
+      );
+      gsap.fromTo('.mobile-drawer-link',
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, stagger: 0.07, ease: 'power3.out', delay: 0.12 }
+      );
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const [activeTheme, setActiveTheme] = useState('dark');
 
@@ -681,18 +701,55 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
           </div>
 
           <button
-            className="mobile-toggle"
+            className={`mobile-toggle ${isOpen ? 'open' : ''}`}
             onClick={() => setIsOpen(!isOpen)}
             style={{
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              color: 'var(--text-primary)',
-              display: 'block',
-              padding: 0
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              width: '24px',
+              height: '18px',
+              padding: 0,
+              position: 'relative',
+              zIndex: 1002,
+              color: 'var(--text-primary)'
             }}
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            <span 
+              className="burger-span"
+              style={{
+                width: '100%',
+                height: '2px',
+                backgroundColor: 'currentColor',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                transform: isOpen ? 'translateY(8px) rotate(45deg)' : 'none',
+                transformOrigin: 'center'
+              }}
+            />
+            <span 
+              className="burger-span"
+              style={{
+                width: '100%',
+                height: '2px',
+                backgroundColor: 'currentColor',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                opacity: isOpen ? 0 : 1
+              }}
+            />
+            <span 
+              className="burger-span"
+              style={{
+                width: '100%',
+                height: '2px',
+                backgroundColor: 'currentColor',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                transform: isOpen ? 'translateY(-8px) rotate(-45deg)' : 'none',
+                transformOrigin: 'center'
+              }}
+            />
           </button>
         </div>
       </div>
@@ -700,74 +757,100 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
       {/* Mobile Drawer menu */}
       {isOpen && (
         <div
+          className="mobile-drawer-overlay"
           style={{
             position: 'fixed',
-            top: scrolled ? '57px' : '77px', // dynamically account for header height
+            top: 0,
             left: 0,
-            width: '100%',
-            backgroundColor: 'var(--bg-primary)',
-            boxShadow: 'var(--shadow-md)',
-            borderTop: '1px solid var(--border)',
-            padding: '1.5rem',
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(3, 3, 3, 0.98)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1.2rem',
-            zIndex: 999
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '1.8rem',
+            zIndex: 1001,
+            padding: '2rem',
+            boxSizing: 'border-box'
           }}
         >
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => {
-                setIsOpen(false);
-                handleNavLinkClick(e, link.href);
-              }}
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: '1rem',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                textDecoration: 'none',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
-              }}
-            >
-              {link.name}
-            </a>
-          ))}
+          <div 
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '1.5rem',
+              textAlign: 'center'
+            }}
+          >
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="mobile-drawer-link"
+                onClick={(e) => {
+                  setIsOpen(false);
+                  handleNavLinkClick(e, link.href);
+                }}
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: '1.4rem',
+                  fontWeight: 800,
+                  color: 'var(--text-primary)',
+                  textDecoration: 'none',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  transition: 'color 0.3s ease'
+                }}
+              >
+                {link.name}
+              </a>
+            ))}
+          </div>
 
           {/* Mobile Language Switcher Row */}
           <div 
+            className="mobile-drawer-link"
             style={{ 
               display: 'flex', 
-              justifyContent: 'space-between', 
+              flexDirection: 'column',
               alignItems: 'center', 
-              borderTop: '1px solid var(--border)',
-              paddingTop: '1rem',
-              marginTop: '0.5rem'
+              gap: '0.8rem',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              paddingTop: '1.5rem',
+              marginTop: '1rem',
+              width: '200px'
             }}
           >
-            <span style={{ fontSize: '0.85rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Language</span>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              {language === 'hy' ? 'Լեզու' : language === 'ru' ? 'Язык' : 'Language'}
+            </span>
+            <div style={{ display: 'flex', gap: '0.6rem' }}>
               {Object.keys(flags).map((lang) => (
                 <button
                   key={lang}
-                  onClick={() => setLanguage(lang)}
+                  onClick={() => {
+                    setLanguage(lang);
+                    setIsOpen(false);
+                  }}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.3rem',
                     padding: '0.4rem 0.8rem',
                     border: '1px solid',
-                    borderColor: language === lang ? 'var(--accent)' : 'var(--border)',
-                    borderRadius: '16px',
-                    backgroundColor: language === lang ? 'rgba(242, 183, 5, 0.1)' : 'var(--bg-secondary)',
+                    borderColor: language === lang ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '20px',
+                    backgroundColor: language === lang ? 'rgba(242, 183, 5, 0.15)' : 'rgba(255, 255, 255, 0.03)',
                     color: 'var(--text-primary)',
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '0.8rem',
+                    fontSize: '0.85rem',
                     fontWeight: 700,
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
                   }}
                 >
                   <span>{flags[lang]}</span>
@@ -778,6 +861,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
           </div>
 
           <button
+            className="mobile-drawer-link"
             onClick={() => {
               setIsOpen(false);
               onOpenBonus();
@@ -786,15 +870,18 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.4rem',
+              gap: '0.5rem',
               backgroundColor: 'var(--accent)',
               color: 'var(--text-primary)',
               border: 'none',
-              padding: '0.8rem',
-              borderRadius: '8px',
+              padding: '0.8rem 1.6rem',
+              borderRadius: '30px',
               fontFamily: 'var(--font-heading)',
               fontWeight: 800,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              boxShadow: '0 4px 15px rgba(242, 183, 5, 0.25)',
+              transition: 'all 0.3s ease',
+              marginTop: '0.5rem'
             }}
           >
             <Gift size={16} />

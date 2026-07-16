@@ -412,71 +412,7 @@ export default function HeroSection({ onOpenBonus }) {
       { scale: 1, opacity: 0.8 },
       { scale: 2.8, opacity: 0, duration: 1.8, repeat: -1, ease: 'power1.out' }
     );
-
-    // 3. Cardiac Assembly Entrance Animation
-    const serviceCards = document.querySelectorAll('.hero-service-card');
-    
-    serviceCards.forEach((card, cardIdx) => {
-      const delay = 0.6 + cardIdx * 0.18; // Staggered delays for each card
-      
-      // Animate card container border and background
-      gsap.fromTo(card,
-        { backgroundColor: 'transparent', borderColor: 'transparent', scale: 0.95 },
-        { 
-          backgroundColor: 'rgba(255, 255, 255, 0.02)', 
-          borderColor: 'rgba(255, 255, 255, 0.06)', 
-          scale: 1, 
-          duration: 0.8, 
-          delay: delay, 
-          ease: 'power3.out',
-          onStart: () => {
-            // Play a soft heartbeat synth on load for the Cardiac Magnet impact!
-            playHeartbeat(55 + cardIdx * 5, 0.2);
-          }
-        }
-      );
-
-      // Snap brackets from off-screen
-      const brackets = card.querySelectorAll('.card-corner-bracket');
-      brackets.forEach((bracket) => {
-        let startX = '0px', startY = '0px', startRot = 0;
-        
-        if (bracket.classList.contains('top-left')) {
-          startX = '-15vw'; startY = '-15vh'; startRot = -90;
-        } else if (bracket.classList.contains('top-right')) {
-          startX = '15vw'; startY = '-15vh'; startRot = 90;
-        } else if (bracket.classList.contains('bottom-left')) {
-          startX = '-15vw'; startY = '15vh'; startRot = -180;
-        } else if (bracket.classList.contains('bottom-right')) {
-          startX = '15vw'; startY = '15vh'; startRot = 180;
-        }
-
-        gsap.fromTo(bracket,
-          { x: startX, y: startY, rotation: startRot, opacity: 0 },
-          { x: '0px', y: '0px', rotation: 0, opacity: 1, duration: 0.85, delay: delay, ease: 'back.out(2)' }
-        );
-      });
-
-      // Assemble card mockups
-      const visual = card.querySelector('.card-visual-wrapper');
-      if (visual) {
-        gsap.fromTo(visual,
-          { scale: 0.3, opacity: 0, rotateY: 180, y: 40 },
-          { scale: 1, opacity: 1, rotateY: 0, y: 0, duration: 0.95, delay: delay + 0.1, ease: 'power4.out' }
-        );
-      }
-
-      // Assemble card details
-      const info = card.querySelector('.card-info');
-      if (info) {
-        gsap.fromTo(info,
-          { y: 35, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.75, delay: delay + 0.25, ease: 'power2.out' }
-        );
-      }
-    });
-
-    // 4. Description & buttons fade-in
+    // 3. Description & buttons fade-in
     gsap.fromTo('.hero-left-column p, .hero-left-column a, .hero-left-column button',
       { y: 20, opacity: 0 },
       {
@@ -488,6 +424,111 @@ export default function HeroSection({ onOpenBonus }) {
         delay: 0.6
       }
     );
+  }, [t]);
+
+  useEffect(() => {
+    const serviceCards = document.querySelectorAll('.hero-service-card');
+    
+    // Function to reset cards to exploded states
+    const resetCards = () => {
+      serviceCards.forEach((card) => {
+        gsap.set(card, { backgroundColor: 'transparent', borderColor: 'transparent', scale: 0.95 });
+        
+        const brackets = card.querySelectorAll('.card-corner-bracket');
+        brackets.forEach((bracket) => {
+          let startX = '0px', startY = '0px', startRot = 0;
+          if (bracket.classList.contains('top-left')) {
+            startX = '-15vw'; startY = '-15vh'; startRot = -90;
+          } else if (bracket.classList.contains('top-right')) {
+            startX = '15vw'; startY = '-15vh'; startRot = 90;
+          } else if (bracket.classList.contains('bottom-left')) {
+            startX = '-15vw'; startY = '15vh'; startRot = -180;
+          } else if (bracket.classList.contains('bottom-right')) {
+            startX = '15vw'; startY = '15vh'; startRot = 180;
+          }
+          gsap.set(bracket, { x: startX, y: startY, rotation: startRot, opacity: 0 });
+        });
+
+        const visual = card.querySelector('.card-visual-wrapper');
+        if (visual) {
+          gsap.set(visual, { scale: 0.3, opacity: 0, rotateY: 180, y: 40 });
+        }
+
+        const info = card.querySelector('.card-info');
+        if (info) {
+          gsap.set(info, { y: 35, opacity: 0 });
+        }
+      });
+    };
+
+    // Function to run Cardiac Assembly
+    const assembleCards = () => {
+      serviceCards.forEach((card, cardIdx) => {
+        const delay = 0.1 + cardIdx * 0.18;
+        
+        gsap.to(card,
+          { 
+            backgroundColor: 'rgba(255, 255, 255, 0.02)', 
+            borderColor: 'rgba(255, 255, 255, 0.06)', 
+            scale: 1, 
+            duration: 0.8, 
+            delay: delay, 
+            ease: 'power3.out',
+            onStart: () => {
+              playHeartbeat(55 + cardIdx * 5, 0.2);
+            }
+          }
+        );
+
+        const brackets = card.querySelectorAll('.card-corner-bracket');
+        brackets.forEach((bracket) => {
+          gsap.to(bracket,
+            { x: '0px', y: '0px', rotation: 0, opacity: 1, duration: 0.85, delay: delay, ease: 'back.out(2)' }
+          );
+        });
+
+        const visual = card.querySelector('.card-visual-wrapper');
+        if (visual) {
+          gsap.to(visual,
+            { scale: 1, opacity: 1, rotateY: 0, y: 0, duration: 0.95, delay: delay + 0.1, ease: 'power4.out' }
+          );
+        }
+
+        const info = card.querySelector('.card-info');
+        if (info) {
+          gsap.to(info,
+            { y: 0, opacity: 1, duration: 0.75, delay: delay + 0.25, ease: 'power2.out' }
+          );
+        }
+      });
+    };
+
+    // Initial reset
+    resetCards();
+
+    // IntersectionObserver scroll tracker
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          assembleCards();
+        } else {
+          resetCards();
+        }
+      });
+    }, {
+      threshold: 0.15
+    });
+
+    const gridEl = document.querySelector('.hero-services-grid');
+    if (gridEl) {
+      observer.observe(gridEl);
+    }
+
+    return () => {
+      if (gridEl) {
+        observer.unobserve(gridEl);
+      }
+    };
   }, [t]);
 
   useEffect(() => {
