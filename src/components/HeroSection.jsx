@@ -331,7 +331,75 @@ export default function HeroSection({ onOpenBonus }) {
       { scale: 1, opacity: 0.8 },
       { scale: 2.8, opacity: 0, duration: 1.8, repeat: -1, ease: 'power1.out' }
     );
+
+    // 3. Staggered card entrance with bounce
+    gsap.fromTo('.hero-service-card',
+      { y: 60, opacity: 0, scale: 0.9 },
+      {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: 'back.out(1.4)',
+        delay: 0.75
+      }
+    );
+
+    // 4. Description & buttons fade-in
+    gsap.fromTo('.hero-left-column p, .hero-left-column a, .hero-left-column button',
+      { y: 20, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.9,
+        stagger: 0.1,
+        ease: 'power3.out',
+        delay: 0.6
+      }
+    );
   }, [t]);
+
+  useEffect(() => {
+    const cards = document.querySelectorAll('.hero-service-card');
+    
+    const handleMouseMoveCard = (e) => {
+      const card = e.currentTarget;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left - (rect.width / 2);
+      const y = e.clientY - rect.top - (rect.height / 2);
+      
+      gsap.to(card, {
+        rotateX: -y / 12,
+        rotateY: x / 12,
+        transformPerspective: 800,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    };
+
+    const handleMouseLeaveCard = (e) => {
+      const card = e.currentTarget;
+      gsap.to(card, {
+        rotateX: 0,
+        rotateY: 0,
+        duration: 0.6,
+        ease: "power4.out"
+      });
+    };
+
+    cards.forEach(card => {
+      card.addEventListener('mousemove', handleMouseMoveCard);
+      card.addEventListener('mouseleave', handleMouseLeaveCard);
+    });
+
+    return () => {
+      cards.forEach(card => {
+        card.removeEventListener('mousemove', handleMouseMoveCard);
+        card.removeEventListener('mouseleave', handleMouseLeaveCard);
+      });
+    };
+  }, []);
 
   const renderTitle = () => {
     const titleText = t('hero.title');
