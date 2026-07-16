@@ -21,9 +21,6 @@ export default function HeroSection({ onOpenBonus }) {
   const particlesArray = useRef([]);
   const underlinePathRef = useRef(null);
 
-  const isAdrenalineActiveRef = useRef(false);
-  const adrenalineTimerRef = useRef(0);
-
   const playHeartbeat = (frequency = 60, intensity = 0.5) => {
     try {
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -61,32 +58,6 @@ export default function HeroSection({ onOpenBonus }) {
       console.warn('Audio contexts not supported/allowed yet by browser security limits.');
     }
   };
-
-  const injectAdrenaline = () => {
-    isAdrenalineActiveRef.current = true;
-    adrenalineTimerRef.current = 0;
-    playHeartbeat(85, 0.95);
-    
-    document.body.classList.add('adrenaline-active');
-
-    // Sudden glow explosion animation
-    gsap.fromTo(blobRedRef.current, 
-      { scale: 1, opacity: 0.08 }, 
-      { scale: 2.2, opacity: 0.35, duration: 0.3, yoyo: true, repeat: 1 }
-    );
-    gsap.fromTo(blobGoldRef.current, 
-      { scale: 1, opacity: 0.09 }, 
-      { scale: 2.0, opacity: 0.3, duration: 0.3, yoyo: true, repeat: 1 }
-    );
-  };
-
-  useEffect(() => {
-    const handleAdrenalineEvent = () => {
-      injectAdrenaline();
-    };
-    window.addEventListener('inject-adrenaline', handleAdrenalineEvent);
-    return () => window.removeEventListener('inject-adrenaline', handleAdrenalineEvent);
-  }, []);
 
   const { t, language } = useLanguage();
 
@@ -246,12 +217,12 @@ export default function HeroSection({ onOpenBonus }) {
 
       // Draw EKG Bio-Mesh Grid
       const gridSpacing = 40;
-      const gridAmp = isAdrenalineActiveRef.current ? 55 : 18;
-      const gridSpeed = isAdrenalineActiveRef.current ? 0.25 : 0.08;
+      const gridAmp = 18;
+      const gridSpeed = 0.08;
       const waveOffset = time * 8 * gridSpeed;
 
       // Draw horizontal lines with active EKG distortion
-      ctx.strokeStyle = isAdrenalineActiveRef.current ? 'rgba(255, 51, 51, 0.12)' : 'rgba(255, 204, 0, 0.05)';
+      ctx.strokeStyle = 'rgba(255, 204, 0, 0.05)';
       ctx.lineWidth = 1;
 
       for (let y = 0; y < canvas.height; y += gridSpacing) {
@@ -279,21 +250,12 @@ export default function HeroSection({ onOpenBonus }) {
       }
 
       // Draw vertical grid lines
-      ctx.strokeStyle = isAdrenalineActiveRef.current ? 'rgba(255, 51, 51, 0.06)' : 'rgba(255, 204, 0, 0.025)';
+      ctx.strokeStyle = 'rgba(255, 204, 0, 0.025)';
       for (let x = 0; x < canvas.width; x += gridSpacing) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, canvas.height);
         ctx.stroke();
-      }
-
-      // Timer update
-      if (isAdrenalineActiveRef.current) {
-        adrenalineTimerRef.current++;
-        if (adrenalineTimerRef.current > 180) {
-          isAdrenalineActiveRef.current = false;
-          document.body.classList.remove('adrenaline-active');
-        }
       }
 
       // Get title bounding box to calculate text ricochet
@@ -317,7 +279,7 @@ export default function HeroSection({ onOpenBonus }) {
 
       particles.forEach((p, idx) => {
         // 1. Idle Float
-        p.angle += p.speed * (isAdrenalineActiveRef.current ? 4 : 1);
+        p.angle += p.speed;
         const driftX = Math.sin(p.angle) * 6;
         const driftY = Math.cos(p.angle) * 6;
 
@@ -359,15 +321,13 @@ export default function HeroSection({ onOpenBonus }) {
             p.vx += (targetX - p.x) * 0.12;
             p.vy += (targetY - p.y) * 0.12;
           } else {
-            const speedMult = isAdrenalineActiveRef.current ? 4.5 : 1.0;
-            p.vx += (homeX + driftX - p.x) * 0.03 * speedMult;
-            p.vy += (homeY + driftY - p.y) * 0.03 * speedMult;
+            p.vx += (homeX + driftX - p.x) * 0.03;
+            p.vy += (homeY + driftY - p.y) * 0.03;
           }
         } else {
           // 5. Default state: return to home position (breathing!)
-          const speedMult = isAdrenalineActiveRef.current ? 4.5 : 1.0;
-          p.vx += (homeX + driftX - p.x) * 0.03 * speedMult;
-          p.vy += (homeY + driftY - p.y) * 0.03 * speedMult;
+          p.vx += (homeX + driftX - p.x) * 0.03;
+          p.vy += (homeY + driftY - p.y) * 0.03;
         }
 
         // Apply Damping and Update positions
@@ -453,19 +413,68 @@ export default function HeroSection({ onOpenBonus }) {
       { scale: 2.8, opacity: 0, duration: 1.8, repeat: -1, ease: 'power1.out' }
     );
 
-    // 3. Staggered card entrance with bounce
-    gsap.fromTo('.hero-service-card',
-      { y: 60, opacity: 0, scale: 0.9 },
-      {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        duration: 1.2,
-        stagger: 0.15,
-        ease: 'back.out(1.4)',
-        delay: 0.75
+    // 3. Cardiac Assembly Entrance Animation
+    const serviceCards = document.querySelectorAll('.hero-service-card');
+    
+    serviceCards.forEach((card, cardIdx) => {
+      const delay = 0.6 + cardIdx * 0.18; // Staggered delays for each card
+      
+      // Animate card container border and background
+      gsap.fromTo(card,
+        { backgroundColor: 'transparent', borderColor: 'transparent', scale: 0.95 },
+        { 
+          backgroundColor: 'rgba(255, 255, 255, 0.02)', 
+          borderColor: 'rgba(255, 255, 255, 0.06)', 
+          scale: 1, 
+          duration: 0.8, 
+          delay: delay, 
+          ease: 'power3.out',
+          onStart: () => {
+            // Play a soft heartbeat synth on load for the Cardiac Magnet impact!
+            playHeartbeat(55 + cardIdx * 5, 0.2);
+          }
+        }
+      );
+
+      // Snap brackets from off-screen
+      const brackets = card.querySelectorAll('.card-corner-bracket');
+      brackets.forEach((bracket) => {
+        let startX = 0, startY = 0, startRot = 0;
+        
+        if (bracket.classList.contains('top-left')) {
+          startX = -80; startY = -80; startRot = -90;
+        } else if (bracket.classList.contains('top-right')) {
+          startX = 80; startY = -80; startRot = 90;
+        } else if (bracket.classList.contains('bottom-left')) {
+          startX = -80; startY = 80; startRot = -180;
+        } else if (bracket.classList.contains('bottom-right')) {
+          startX = 80; startY = 80; startRot = 180;
+        }
+
+        gsap.fromTo(bracket,
+          { x: startX, y: startY, rotation: startRot, opacity: 0 },
+          { x: 0, y: 0, rotation: 0, opacity: 1, duration: 0.85, delay: delay, ease: 'back.out(2)' }
+        );
+      });
+
+      // Assemble card mockups
+      const visual = card.querySelector('.card-visual-wrapper');
+      if (visual) {
+        gsap.fromTo(visual,
+          { scale: 0.3, opacity: 0, rotateY: 180, y: 40 },
+          { scale: 1, opacity: 1, rotateY: 0, y: 0, duration: 0.95, delay: delay + 0.1, ease: 'power4.out' }
+        );
       }
-    );
+
+      // Assemble card details
+      const info = card.querySelector('.card-info');
+      if (info) {
+        gsap.fromTo(info,
+          { y: 35, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.75, delay: delay + 0.25, ease: 'power2.out' }
+        );
+      }
+    });
 
     // 4. Description & buttons fade-in
     gsap.fromTo('.hero-left-column p, .hero-left-column a, .hero-left-column button',
@@ -561,7 +570,6 @@ export default function HeroSection({ onOpenBonus }) {
               <span 
                 className="reveal-word-inner accent-word-neon" 
                 style={{ display: 'inline-block', color: 'var(--accent)', fontWeight: 900, cursor: 'pointer' }}
-                onClick={injectAdrenaline}
                 onMouseEnter={(e) => {
                   isAttractedToWord.current = true;
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -864,6 +872,10 @@ export default function HeroSection({ onOpenBonus }) {
           >
             {/* Card 1: SMM */}
             <div className="hero-service-card card-smm" onMouseMove={handleMouseMoveSMM}>
+              <div className="card-corner-bracket top-left" style={{ borderColor: '#FF3333' }}></div>
+              <div className="card-corner-bracket top-right" style={{ borderColor: '#FF3333' }}></div>
+              <div className="card-corner-bracket bottom-left" style={{ borderColor: '#FF3333' }}></div>
+              <div className="card-corner-bracket bottom-right" style={{ borderColor: '#FF3333' }}></div>
               <div className="card-visual-wrapper">
                 <img src="/smm_card.png" alt="SMM" className="card-visual-img" />
                 <span className="floating-heart fh1">❤️</span>
@@ -885,6 +897,10 @@ export default function HeroSection({ onOpenBonus }) {
 
             {/* Card 2: Branding */}
             <div className="hero-service-card card-branding">
+              <div className="card-corner-bracket top-left" style={{ borderColor: '#FFCC00' }}></div>
+              <div className="card-corner-bracket top-right" style={{ borderColor: '#FFCC00' }}></div>
+              <div className="card-corner-bracket bottom-left" style={{ borderColor: '#FFCC00' }}></div>
+              <div className="card-corner-bracket bottom-right" style={{ borderColor: '#FFCC00' }}></div>
               <div className="card-visual-wrapper">
                 <img src="/branding_card.png" alt="Branding" className="card-visual-img" />
                 <div className="branding-laser-line" />
@@ -901,6 +917,10 @@ export default function HeroSection({ onOpenBonus }) {
 
             {/* Card 3: CGI */}
             <div className="hero-service-card card-cgi">
+              <div className="card-corner-bracket top-left" style={{ borderColor: '#2ECC71' }}></div>
+              <div className="card-corner-bracket top-right" style={{ borderColor: '#2ECC71' }}></div>
+              <div className="card-corner-bracket bottom-left" style={{ borderColor: '#2ECC71' }}></div>
+              <div className="card-corner-bracket bottom-right" style={{ borderColor: '#2ECC71' }}></div>
               <div className="card-visual-wrapper">
                 <img src="/cgi_card.png" alt="CGI" className="card-visual-img" />
                 <div className="orbiting-ring or1" />

@@ -1614,6 +1614,41 @@ div[onMouseMove]:hover .reel-card-sheen {
   z-index: 1;
 }
 
+/* Sci-fi HUD Card Corner Brackets */
+.card-corner-bracket {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 1.8px solid var(--accent);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 5;
+}
+.card-corner-bracket.top-left {
+  top: -1px;
+  left: -1px;
+  border-right: none !important;
+  border-bottom: none !important;
+}
+.card-corner-bracket.top-right {
+  top: -1px;
+  right: -1px;
+  border-left: none !important;
+  border-bottom: none !important;
+}
+.card-corner-bracket.bottom-left {
+  bottom: -1px;
+  left: -1px;
+  border-right: none !important;
+  border-top: none !important;
+}
+.card-corner-bracket.bottom-right {
+  bottom: -1px;
+  right: -1px;
+  border-left: none !important;
+  border-top: none !important;
+}
+
 .hero-service-card::after {
   content: '';
   position: absolute;
@@ -1924,17 +1959,4 @@ div[onMouseMove]:hover .reel-card-sheen {
   color: #0F172A !important;
 }
 
-/* Adrenaline Surge Screen Glitch styles */
-.adrenaline-active {
-  animation: adrenalineGlitch 0.15s infinite;
-}
-
-@keyframes adrenalineGlitch {
-  0% { transform: translate(0) skew(0); }
-  20% { transform: translate(-2px, 2px) skew(-0.5deg); }
-  40% { transform: translate(-2px, -2px) skew(0.5deg); }
-  60% { transform: translate(2px, 2px) skew(0); }
-  80% { transform: translate(2px, -2px) skew(-0.5deg); }
-  100% { transform: translate(0) skew(0); }
-}
 
