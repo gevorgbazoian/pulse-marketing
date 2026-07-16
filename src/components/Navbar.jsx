@@ -559,6 +559,40 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
             )}
           </div>
 
+          {/* Adrenaline Button */}
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('inject-adrenaline'))}
+            className="btn-adrenaline-surge"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: 'linear-gradient(135deg, #FF3333 0%, #FFCC00 100%)',
+              color: '#000000',
+              border: 'none',
+              padding: '0.5rem 1.2rem',
+              borderRadius: '30px',
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              boxShadow: '0 4px 10px rgba(255, 51, 51, 0.25)',
+              transition: 'all 0.3s ease',
+              marginRight: '0.5rem'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+              e.currentTarget.style.boxShadow = '0 6px 15px rgba(255, 51, 51, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 10px rgba(255, 51, 51, 0.25)';
+            }}
+          >
+            <span style={{ fontSize: '0.9rem', display: 'inline-block', transform: 'rotate(15deg)' }}>⚡</span>
+            <span>{language === 'hy' ? 'ԱԴՐԵՆԱԼԻՆ' : language === 'ru' ? 'АДРЕНАЛИН' : 'ADRENALINE'}</span>
+          </button>
+
           {/* Bonus Button */}
           <button
             onClick={onOpenBonus}

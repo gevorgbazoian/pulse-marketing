@@ -21,6 +21,73 @@ export default function HeroSection({ onOpenBonus }) {
   const particlesArray = useRef([]);
   const underlinePathRef = useRef(null);
 
+  const isAdrenalineActiveRef = useRef(false);
+  const adrenalineTimerRef = useRef(0);
+
+  const playHeartbeat = (frequency = 60, intensity = 0.5) => {
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      const audioCtx = new AudioContextClass();
+
+      // Lub Beat
+      const osc1 = audioCtx.createOscillator();
+      const gain1 = audioCtx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      gain1.gain.setValueAtTime(intensity, audioCtx.currentTime);
+      gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      osc1.connect(gain1);
+      gain1.connect(audioCtx.destination);
+      osc1.start();
+      osc1.stop(audioCtx.currentTime + 0.15);
+
+      // Dub Beat
+      setTimeout(() => {
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(frequency * 1.2, audioCtx.currentTime);
+        osc2.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.18);
+        gain2.gain.setValueAtTime(intensity * 0.8, audioCtx.currentTime);
+        gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.18);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start();
+        osc2.stop(audioCtx.currentTime + 0.18);
+      }, 150);
+    } catch (e) {
+      console.warn('Audio contexts not supported/allowed yet by browser security limits.');
+    }
+  };
+
+  const injectAdrenaline = () => {
+    isAdrenalineActiveRef.current = true;
+    adrenalineTimerRef.current = 0;
+    playHeartbeat(85, 0.95);
+    
+    document.body.classList.add('adrenaline-active');
+
+    // Sudden glow explosion animation
+    gsap.fromTo(blobRedRef.current, 
+      { scale: 1, opacity: 0.08 }, 
+      { scale: 2.2, opacity: 0.35, duration: 0.3, yoyo: true, repeat: 1 }
+    );
+    gsap.fromTo(blobGoldRef.current, 
+      { scale: 1, opacity: 0.09 }, 
+      { scale: 2.0, opacity: 0.3, duration: 0.3, yoyo: true, repeat: 1 }
+    );
+  };
+
+  useEffect(() => {
+    const handleAdrenalineEvent = () => {
+      injectAdrenaline();
+    };
+    window.addEventListener('inject-adrenaline', handleAdrenalineEvent);
+    return () => window.removeEventListener('inject-adrenaline', handleAdrenalineEvent);
+  }, []);
+
   const { t, language } = useLanguage();
 
   const triggerPulseUnderline = () => {
@@ -176,7 +243,59 @@ export default function HeroSection({ onOpenBonus }) {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       time += 0.015;
-      
+
+      // Draw EKG Bio-Mesh Grid
+      const gridSpacing = 40;
+      const gridAmp = isAdrenalineActiveRef.current ? 55 : 18;
+      const gridSpeed = isAdrenalineActiveRef.current ? 0.25 : 0.08;
+      const waveOffset = time * 8 * gridSpeed;
+
+      // Draw horizontal lines with active EKG distortion
+      ctx.strokeStyle = isAdrenalineActiveRef.current ? 'rgba(255, 51, 51, 0.12)' : 'rgba(255, 204, 0, 0.05)';
+      ctx.lineWidth = 1;
+
+      for (let y = 0; y < canvas.height; y += gridSpacing) {
+        ctx.beginPath();
+        for (let x = 0; x < canvas.width; x += 10) {
+          // Create mouse distention gravity well
+          const dx = x - mouse.x;
+          const dy = y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const force = mouse.active ? Math.max(0, (200 - dist) / 200) : 0;
+
+          // Standard sine wave coupled with EKG spikes
+          let wave = Math.sin(x * 0.005 + waveOffset) * gridAmp;
+          if (Math.abs(x - (waveOffset * 100) % canvas.width) < 150) {
+            wave += Math.sin(x * 0.05) * gridAmp * 1.5; // Simulate ECG spike passing through
+          }
+
+          // Distort with mouse movement
+          const yOffset = wave + (dy * force * 0.4);
+
+          if (x === 0) ctx.moveTo(x, y + yOffset);
+          else ctx.lineTo(x, y + yOffset);
+        }
+        ctx.stroke();
+      }
+
+      // Draw vertical grid lines
+      ctx.strokeStyle = isAdrenalineActiveRef.current ? 'rgba(255, 51, 51, 0.06)' : 'rgba(255, 204, 0, 0.025)';
+      for (let x = 0; x < canvas.width; x += gridSpacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+
+      // Timer update
+      if (isAdrenalineActiveRef.current) {
+        adrenalineTimerRef.current++;
+        if (adrenalineTimerRef.current > 180) {
+          isAdrenalineActiveRef.current = false;
+          document.body.classList.remove('adrenaline-active');
+        }
+      }
+
       // Get title bounding box to calculate text ricochet
       const titleEl = titleRef.current;
       let titleRect = null;
@@ -198,7 +317,7 @@ export default function HeroSection({ onOpenBonus }) {
 
       particles.forEach((p, idx) => {
         // 1. Idle Float
-        p.angle += p.speed;
+        p.angle += p.speed * (isAdrenalineActiveRef.current ? 4 : 1);
         const driftX = Math.sin(p.angle) * 6;
         const driftY = Math.cos(p.angle) * 6;
 
@@ -240,13 +359,15 @@ export default function HeroSection({ onOpenBonus }) {
             p.vx += (targetX - p.x) * 0.12;
             p.vy += (targetY - p.y) * 0.12;
           } else {
-            p.vx += (homeX + driftX - p.x) * 0.03;
-            p.vy += (homeY + driftY - p.y) * 0.03;
+            const speedMult = isAdrenalineActiveRef.current ? 4.5 : 1.0;
+            p.vx += (homeX + driftX - p.x) * 0.03 * speedMult;
+            p.vy += (homeY + driftY - p.y) * 0.03 * speedMult;
           }
         } else {
           // 5. Default state: return to home position (breathing!)
-          p.vx += (homeX + driftX - p.x) * 0.03;
-          p.vy += (homeY + driftY - p.y) * 0.03;
+          const speedMult = isAdrenalineActiveRef.current ? 4.5 : 1.0;
+          p.vx += (homeX + driftX - p.x) * 0.03 * speedMult;
+          p.vy += (homeY + driftY - p.y) * 0.03 * speedMult;
         }
 
         // Apply Damping and Update positions
@@ -440,6 +561,7 @@ export default function HeroSection({ onOpenBonus }) {
               <span 
                 className="reveal-word-inner accent-word-neon" 
                 style={{ display: 'inline-block', color: 'var(--accent)', fontWeight: 900, cursor: 'pointer' }}
+                onClick={injectAdrenaline}
                 onMouseEnter={(e) => {
                   isAttractedToWord.current = true;
                   const rect = e.currentTarget.getBoundingClientRect();

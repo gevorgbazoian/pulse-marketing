@@ -1924,3 +1924,17 @@ div[onMouseMove]:hover .reel-card-sheen {
   color: #0F172A !important;
 }
 
+/* Adrenaline Surge Screen Glitch styles */
+.adrenaline-active {
+  animation: adrenalineGlitch 0.15s infinite;
+}
+
+@keyframes adrenalineGlitch {
+  0% { transform: translate(0) skew(0); }
+  20% { transform: translate(-2px, 2px) skew(-0.5deg); }
+  40% { transform: translate(-2px, -2px) skew(0.5deg); }
+  60% { transform: translate(2px, 2px) skew(0); }
+  80% { transform: translate(2px, -2px) skew(-0.5deg); }
+  100% { transform: translate(0) skew(0); }
+}
+
