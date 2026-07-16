@@ -1845,32 +1845,39 @@ div[onMouseMove]:hover .reel-card-sheen {
 
 /* Dynamic Navbar Logo Theme Classes */
 .logo-anchor {
-  font-weight: 900;
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .theme-dark .logo-anchor,
 .logo-anchor.theme-dark {
+  filter: drop-shadow(0 0 10px rgba(255, 204, 0, 0.35)) !important;
+}
+
+.theme-dark .logo-anchor .logo-brand-text {
   color: #FAF6F1 !important;
-  filter: drop-shadow(0 0 10px rgba(255, 204, 0, 0.4)) !important;
 }
 
 .theme-dark .logo-anchor .logo-marketing {
   color: #FAF6F1 !important;
-  opacity: 0.85;
-  filter: drop-shadow(0 0 8px rgba(250, 246, 241, 0.25)) !important;
+  opacity: 0.8;
 }
 
 .theme-light .logo-anchor,
 .logo-anchor.theme-light {
-  color: #0F172A !important;
   filter: drop-shadow(0 0 4px rgba(15, 23, 42, 0.1)) !important;
+}
+
+.theme-light .logo-anchor .logo-brand-text {
+  color: #0F172A !important;
 }
 
 .theme-light .logo-anchor .logo-marketing {
   color: #0F172A !important;
   opacity: 0.7;
-  filter: none !important;
+}
+
+.logo-anchor:hover .logo-icon-capsule {
+  transform: scale(1.1);
 }
 
 /* Dynamic Navbar Links & Controls */

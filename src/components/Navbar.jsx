@@ -279,45 +279,36 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.4rem',
+            gap: '0.6rem',
             textDecoration: 'none',
             fontFamily: 'var(--font-heading)',
-            fontWeight: 900,
-            fontSize: '1.4rem',
-            letterSpacing: '-0.02em',
             position: 'relative'
           }}
         >
-          <span>pulse</span>
-          <span 
-            className="logo-dot-container"
+          {/* Vector P capsule */}
+          <div 
+            className="logo-icon-capsule"
             style={{
               position: 'relative',
-              width: '8px',
-              height: '8px',
-              display: 'inline-block',
-              alignSelf: 'flex-end',
-              marginBottom: '6px'
+              width: '36px',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'linear-gradient(135deg, #FFCC00 0%, #FF3333 100%)',
+              borderRadius: '50%',
+              boxShadow: '0 4px 12px rgba(255, 204, 0, 0.25)',
+              transition: 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
             }}
           >
-            <span 
-              className="logo-dot"
-              style={{
-                width: '8px',
-                height: '8px',
-                backgroundColor: 'var(--accent)',
-                borderRadius: '50%',
-                display: 'block',
-                position: 'relative'
-              }}
-            >
-              {/* 3 Orbit Particles for Pulse Orbit signature interaction */}
-              <span className="logo-orbit-particle p1" />
-              <span className="logo-orbit-particle p2" />
-              <span className="logo-orbit-particle p3" />
-            </span>
-          </span>
-          <span className="logo-marketing" style={{ fontSize: '0.8rem', fontWeight: 600, marginLeft: '4px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Marketing</span>
+            <svg style={{ width: '18px', height: '18px', color: '#000000', display: 'block' }} viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 3h6a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H9v6H6V3zm3 3v6h3a3 3 0 0 0 3-3v0a3 3 0 0 0-3-3H9z"/>
+            </svg>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.1' }}>
+            <span className="logo-brand-text" style={{ fontSize: '1.2rem', fontWeight: 900, letterSpacing: '0.05em', textTransform: 'uppercase' }}>PULSE</span>
+            <span className="logo-marketing" style={{ fontSize: '0.55rem', fontWeight: 800, color: '#A0A5AA', textTransform: 'uppercase', letterSpacing: '0.25em', marginTop: '2px' }}>Marketing</span>
+          </div>
         </a>
 
         {/* Desktop Navigation Links Container (Centered Pill) */}

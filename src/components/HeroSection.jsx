@@ -389,8 +389,7 @@ export default function HeroSection({ onOpenBonus }) {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: 'center',
-        padding: '8rem 2rem 4rem',
+        padding: '6rem 2rem 2.5rem',
         position: 'relative',
         backgroundColor: '#000000',
         overflow: 'hidden'
@@ -446,200 +445,251 @@ export default function HeroSection({ onOpenBonus }) {
         }}
       />
 
+      <style>{`
+        @media (max-width: 1024px) {
+          .hero-inner-container {
+            flex-direction: column !important;
+            align-items: center !important;
+            text-align: center !important;
+            padding-top: 2rem !important;
+            gap: 2.5rem !important;
+          }
+          .hero-left-column {
+            align-items: center !important;
+            text-align: center !important;
+            max-width: 100% !important;
+          }
+          .hero-left-column h1 {
+            font-size: clamp(32px, 6vw, 46px) !important;
+          }
+          .hero-right-column {
+            width: 100% !important;
+          }
+          .hero-services-grid {
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+            gap: 1.5rem !important;
+            margin: 0 auto !important;
+          }
+        }
+      `}</style>
+
       <div 
+        className="hero-inner-container"
         style={{
-          maxWidth: '850px',
-          margin: '0 auto',
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'row',
           alignItems: 'center',
-          gap: '1.5rem',
-          zIndex: 2,
-          position: 'relative'
-        }}
-      >
-        {/* Slogan Badge with Breathing Aura Ring */}
-        <div 
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.6rem',
-            backgroundColor: '#212224',
-            padding: '0.5rem 1.2rem',
-            borderRadius: '50px',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-          }}
-        >
-          <span style={{ position: 'relative', display: 'flex', width: '8px', height: '8px' }}>
-            <span ref={badgePulseRef} style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'var(--pulse-red)', borderRadius: '50%' }} />
-            <span ref={pulseRef} style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'var(--pulse-red)', borderRadius: '50%' }} />
-            <span style={{ position: 'relative', width: '8px', height: '8px', backgroundColor: 'var(--pulse-red)', borderRadius: '50%' }} />
-          </span>
-          <span 
-            style={{ 
-              fontFamily: 'var(--font-heading)', 
-              fontWeight: 800, 
-              fontSize: '0.75rem', 
-              letterSpacing: '0.15em', 
-              color: '#FDFCF7',
-              textTransform: 'uppercase'
-            }}
-          >
-            {t('hero.badge')}
-          </span>
-        </div>
-
-        {/* Word-by-word Reveal Title */}
-        <h1 
-          ref={titleRef}
-          style={{
-            fontSize: 'clamp(42px, 8vw, 84px)',
-            lineHeight: '1.15',
-            fontFamily: 'var(--font-heading)',
-            color: '#FDFCF7',
-            maxWidth: '780px'
-          }}
-        >
-          {renderTitle()}
-        </h1>
-
-        {/* Description Paragraph */}
-        <div style={{ maxWidth: '650px', margin: '0 auto' }}>
-          <div className="full-text">
-            <p 
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: '1.15rem',
-                color: '#A0A5AA',
-                lineHeight: '1.7'
-              }}
-            >
-              {t('hero.descFull1')}
-            </p>
-            <p 
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: '0.95rem',
-                color: '#A0A5AA',
-                marginTop: '0.8rem',
-                fontStyle: 'italic'
-              }}
-            >
-              {t('hero.descFull2')}
-            </p>
-          </div>
-
-          <div className="short-text">
-            <p 
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: '1.05rem',
-                color: '#A0A5AA',
-                lineHeight: '1.5'
-              }}
-            >
-              {t('hero.descShort')}
-            </p>
-          </div>
-        </div>
-
-        {/* Interactive Action Buttons */}
-        <div 
-          style={{ 
-            display: 'flex', 
-            gap: '1rem', 
-            marginTop: '1.5rem',
-            flexWrap: 'wrap',
-            justifyContent: 'center' 
-          }}
-        >
-          {/* Services: Liquid Fill Hover button */}
-          <a 
-            href="#services" 
-            className="btn-primary btn-liquid-fill" 
-            style={{ textDecoration: 'none', position: 'relative', overflow: 'hidden' }}
-          >
-            <span className="liquid-bg" />
-            <span className="btn-text-content">{t('hero.btnServices')}</span>
-          </a>
-
-          {/* Free Audit: Sleek Glassmorphic Outline Button */}
-          <button 
-            onClick={onOpenBonus} 
-            className="btn-free-audit"
-          >
-            <span>{t('hero.btnAudit')}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* 3-Column Services Interactive Grid */}
-      <div 
-        className="hero-services-grid"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '2rem',
+          justifyContent: 'space-between',
+          gap: '3rem',
           width: '100%',
           maxWidth: '1200px',
-          margin: '3.5rem auto 1.5rem',
-          padding: '0 1.5rem',
+          margin: '0 auto',
           zIndex: 2,
           position: 'relative',
           boxSizing: 'border-box'
         }}
       >
-        {/* Card 1: SMM */}
-        <div className="hero-service-card card-smm">
-          <div className="card-visual-wrapper">
-            <img src="/smm_card.png" alt="SMM" className="card-visual-img" />
-            <span className="floating-heart fh1">❤️</span>
-            <span className="floating-like fl1">👍</span>
-            <span className="floating-heart fh2">❤️</span>
-            <span className="floating-like fl2">🔥</span>
-            <span className="floating-pulse fp1">💛</span>
-            <span className="floating-pulse fp2">⚡</span>
+        {/* LEFT COLUMN: Compact Headline & Description */}
+        <div 
+          className="hero-left-column"
+          style={{
+            flex: '1',
+            maxWidth: '520px',
+            textAlign: 'left',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.25rem',
+            alignItems: 'flex-start'
+          }}
+        >
+          {/* Slogan Badge with Breathing Aura Ring */}
+          <div 
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.6rem',
+              backgroundColor: '#212224',
+              padding: '0.5rem 1.2rem',
+              borderRadius: '50px',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}
+          >
+            <span style={{ position: 'relative', display: 'flex', width: '8px', height: '8px' }}>
+              <span ref={badgePulseRef} style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'var(--pulse-red)', borderRadius: '50%' }} />
+              <span ref={pulseRef} style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'var(--pulse-red)', borderRadius: '50%' }} />
+              <span style={{ position: 'relative', width: '8px', height: '8px', backgroundColor: 'var(--pulse-red)', borderRadius: '50%' }} />
+            </span>
+            <span 
+              style={{ 
+                fontFamily: 'var(--font-heading)', 
+                fontWeight: 800, 
+                fontSize: '0.75rem', 
+                letterSpacing: '0.15em', 
+                color: '#FAF6F1',
+                textTransform: 'uppercase'
+              }}
+            >
+              {t('hero.badge')}
+            </span>
           </div>
-          <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
-              {t('hero.grid.smmTitle')}
-            </h3>
-            <p style={{ fontSize: '0.82rem', color: '#A0A5AA', lineHeight: '1.45', margin: 0, fontFamily: 'var(--font-sans)', transition: 'color 0.3s ease' }}>
-              {t('hero.grid.smmDesc')}
-            </p>
+
+          {/* Word-by-word Reveal Title */}
+          <h1 
+            ref={titleRef}
+            style={{
+              fontSize: 'clamp(36px, 4vw, 52px)',
+              lineHeight: '1.15',
+              fontFamily: 'var(--font-heading)',
+              color: '#FAF6F1',
+              margin: 0
+            }}
+          >
+            {renderTitle()}
+          </h1>
+
+          {/* Description Paragraph */}
+          <div style={{ width: '100%' }}>
+            <div className="full-text">
+              <p 
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '1.05rem',
+                  color: '#A0A5AA',
+                  lineHeight: '1.6',
+                  margin: 0
+                }}
+              >
+                {t('hero.descFull1')}
+              </p>
+              <p 
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '0.9rem',
+                  color: '#A0A5AA',
+                  marginTop: '0.6rem',
+                  fontStyle: 'italic',
+                  margin: '0.6rem 0 0'
+                }}
+              >
+                {t('hero.descFull2')}
+              </p>
+            </div>
+
+            <div className="short-text">
+              <p 
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: '1.05rem',
+                  color: '#A0A5AA',
+                  lineHeight: '1.5',
+                  margin: 0
+                }}
+              >
+                {t('hero.descShort')}
+              </p>
+            </div>
+          </div>
+
+          {/* Interactive Action Buttons */}
+          <div 
+            style={{ 
+              display: 'flex', 
+              gap: '1rem', 
+              marginTop: '0.5rem',
+              flexWrap: 'wrap'
+            }}
+          >
+            {/* Services: Liquid Fill Hover button */}
+            <a 
+              href="#services" 
+              className="btn-primary btn-liquid-fill" 
+              style={{ textDecoration: 'none', position: 'relative', overflow: 'hidden' }}
+            >
+              <span className="liquid-bg" />
+              <span className="btn-text-content">{t('hero.btnServices')}</span>
+            </a>
+
+            {/* Free Audit: Sleek Glassmorphic Outline Button */}
+            <button 
+              onClick={onOpenBonus} 
+              className="btn-free-audit"
+            >
+              <span>{t('hero.btnAudit')}</span>
+            </button>
           </div>
         </div>
 
-        {/* Card 2: Branding */}
-        <div className="hero-service-card card-branding">
-          <div className="card-visual-wrapper">
-            <img src="/branding_card.png" alt="Branding" className="card-visual-img" />
-            <div className="branding-laser-line" />
-          </div>
-          <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
-              {t('hero.grid.brandingTitle')}
-            </h3>
-            <p style={{ fontSize: '0.82rem', color: '#A0A5AA', lineHeight: '1.45', margin: 0, fontFamily: 'var(--font-sans)', transition: 'color 0.3s ease' }}>
-              {t('hero.grid.brandingDesc')}
-            </p>
-          </div>
-        </div>
+        {/* RIGHT COLUMN: 3-Column Services Interactive Grid */}
+        <div 
+          className="hero-right-column"
+          style={{
+            flex: '1.2',
+            width: '100%'
+          }}
+        >
+          <div 
+            className="hero-services-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '1rem',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          >
+            {/* Card 1: SMM */}
+            <div className="hero-service-card card-smm">
+              <div className="card-visual-wrapper">
+                <img src="/smm_card.png" alt="SMM" className="card-visual-img" />
+                <span className="floating-heart fh1">❤️</span>
+                <span className="floating-like fl1">👍</span>
+                <span className="floating-heart fh2">❤️</span>
+                <span className="floating-like fl2">🔥</span>
+                <span className="floating-pulse fp1">💛</span>
+                <span className="floating-pulse fp2">⚡</span>
+              </div>
+              <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
+                <h3 style={{ fontSize: '0.95rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
+                  {t('hero.grid.smmTitle')}
+                </h3>
+                <p style={{ fontSize: '0.78rem', color: '#A0A5AA', lineHeight: '1.4', margin: 0, fontFamily: 'var(--font-sans)', transition: 'color 0.3s ease' }}>
+                  {t('hero.grid.smmDesc')}
+                </p>
+              </div>
+            </div>
 
-        {/* Card 3: CGI */}
-        <div className="hero-service-card card-cgi">
-          <div className="card-visual-wrapper">
-            <img src="/cgi_card.png" alt="CGI" className="card-visual-img" />
-            <div className="orbiting-ring or1" />
-            <div className="orbiting-ring or2" />
-          </div>
-          <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
-              {t('hero.grid.cgiTitle')}
-            </h3>
-            <p style={{ fontSize: '0.82rem', color: '#A0A5AA', lineHeight: '1.45', margin: 0, fontFamily: 'var(--font-sans)', transition: 'color 0.3s ease' }}>
-              {t('hero.grid.cgiDesc')}
-            </p>
+            {/* Card 2: Branding */}
+            <div className="hero-service-card card-branding">
+              <div className="card-visual-wrapper">
+                <img src="/branding_card.png" alt="Branding" className="card-visual-img" />
+                <div className="branding-laser-line" />
+              </div>
+              <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
+                <h3 style={{ fontSize: '0.95rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
+                  {t('hero.grid.brandingTitle')}
+                </h3>
+                <p style={{ fontSize: '0.78rem', color: '#A0A5AA', lineHeight: '1.4', margin: 0, fontFamily: 'var(--font-sans)', transition: 'color 0.3s ease' }}>
+                  {t('hero.grid.brandingDesc')}
+                </p>
+              </div>
+            </div>
+
+            {/* Card 3: CGI */}
+            <div className="hero-service-card card-cgi">
+              <div className="card-visual-wrapper">
+                <img src="/cgi_card.png" alt="CGI" className="card-visual-img" />
+                <div className="orbiting-ring or1" />
+                <div className="orbiting-ring or2" />
+              </div>
+              <div className="card-info" style={{ position: 'relative', zIndex: 2 }}>
+                <h3 style={{ fontSize: '0.95rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem', fontFamily: 'var(--font-heading)' }}>
+                  {t('hero.grid.cgiTitle')}
+                </h3>
+                <p style={{ fontSize: '0.78rem', color: '#A0A5AA', lineHeight: '1.4', margin: 0, fontFamily: 'var(--font-sans)', transition: 'color 0.3s ease' }}>
+                  {t('hero.grid.cgiDesc')}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
