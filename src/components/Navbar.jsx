@@ -89,6 +89,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
   const themeClass = activeTheme === 'light' ? 'theme-light' : 'theme-dark';
 
   useEffect(() => {
+    setWindowWidth(window.innerWidth);
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -337,110 +338,210 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
           </div>
         </a>
 
-        {/* Desktop Navigation Links Container (Centered Pill) */}
-        <div 
-          className="desktop-links-menu"
-          onMouseEnter={() => {
-            setNavMouseHovered(true);
-            window.dispatchEvent(new CustomEvent('navbar-hover-state', { detail: { hovered: true } }));
-          }}
-          onMouseLeave={() => {
-            setNavMouseHovered(false);
-            window.dispatchEvent(new CustomEvent('navbar-hover-state', { detail: { hovered: false } }));
-          }}
-          onMouseMove={handleMouseMove}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: isTabletNarrow ? '10px' : 'clamp(8px, 1.2vw, 20px)',
-            justifyContent: 'center',
-            flexShrink: 1,
-            padding: isTabletNarrow ? '0.25rem 0.8rem' : '0.35rem clamp(0.6rem, 1.5vw, 1.5rem)',
-            position: 'relative',
-            overflow: 'visible'
-          }}
-        >
-          {/* Bento Menu Canvas Particles background */}
-          <canvas 
-            ref={navbarCanvasRef} 
-            style={{ 
-              position: 'absolute', 
-              top: 0, 
-              left: 0, 
-              width: '100%', 
-              height: '100%', 
-              pointerEvents: 'none', 
-              zIndex: 0 
-            }} 
-          />
+        {!isMobile && (
+          <div 
+            className="desktop-links-menu"
+            onMouseEnter={() => {
+              setNavMouseHovered(true);
+              window.dispatchEvent(new CustomEvent('navbar-hover-state', { detail: { hovered: true } }));
+            }}
+            onMouseLeave={() => {
+              setNavMouseHovered(false);
+              window.dispatchEvent(new CustomEvent('navbar-hover-state', { detail: { hovered: false } }));
+            }}
+            onMouseMove={handleMouseMove}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: isTabletNarrow ? '10px' : 'clamp(8px, 1.2vw, 20px)',
+              justifyContent: 'center',
+              flexShrink: 1,
+              padding: isTabletNarrow ? '0.25rem 0.8rem' : '0.35rem clamp(0.6rem, 1.5vw, 1.5rem)',
+              position: 'relative',
+              overflow: 'visible'
+            }}
+          >
+            {/* Bento Menu Canvas Particles background */}
+            <canvas 
+              ref={navbarCanvasRef} 
+              style={{ 
+                position: 'absolute', 
+                top: 0, 
+                left: 0, 
+                width: '100%', 
+                height: '100%', 
+                pointerEvents: 'none', 
+                zIndex: 0 
+              }} 
+            />
 
-          {visibleLinks.map((link) => {
-            const isLinkActive = 
-              (link.href === '#services' && currentPage === 'services') ||
-              (link.href === '#results' && currentPage === 'results') ||
-              (link.href === '#about' && currentPage === 'about') ||
-              (link.href === '#blog' && currentPage === 'blog') ||
-              (link.href === '#contact' && currentPage === 'contact');
+            {visibleLinks.map((link) => {
+              const isLinkActive = 
+                (link.href === '#services' && currentPage === 'services') ||
+                (link.href === '#results' && currentPage === 'results') ||
+                (link.href === '#about' && currentPage === 'about') ||
+                (link.href === '#blog' && currentPage === 'blog') ||
+                (link.href === '#contact' && currentPage === 'contact');
 
-            return (
-              <div key={link.href} style={{ position: 'relative', zIndex: 1 }}>
-                <a
-                  href={link.href}
-                  onClick={(e) => handleNavLinkClick(e, link.href)}
-                  className="nav-item-link"
+              return (
+                <div key={link.href} style={{ position: 'relative', zIndex: 1 }}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => handleNavLinkClick(e, link.href)}
+                    className="nav-item-link"
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: isTabletNarrow ? '11px' : 'clamp(11px, 0.8vw, 13px)',
+                      fontWeight: 700,
+                      color: 'var(--text-primary)',
+                      textDecoration: 'none',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                      padding: '0.4rem 0.8rem',
+                      borderRadius: '8px',
+                      backgroundColor: isLinkActive ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+                      transition: 'color 0.3s ease, background-color 0.3s ease'
+                    }}
+                  >
+                    {link.name}
+                  </a>
+                  {isLinkActive && (
+                    <div 
+                      className="active-indicator"
+                      style={{
+                        position: 'absolute',
+                        bottom: '-2px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '4px',
+                        height: '4px',
+                        borderRadius: '50%',
+                        backgroundColor: 'var(--accent)'
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })}
+
+            {/* "More" dropdown for tablet layout */}
+            {(isTabletNarrow || isTabletWide) && (
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <button
+                  onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
                   style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
                     fontFamily: 'var(--font-heading)',
-                    fontSize: isTabletNarrow ? '11px' : 'clamp(11px, 0.8vw, 13px)',
+                    fontSize: '11px',
                     fontWeight: 700,
                     color: 'var(--text-primary)',
-                    textDecoration: 'none',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    position: 'relative',
-                    padding: '0.2rem 0',
-                    display: 'block',
-                    whiteSpace: 'nowrap'
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    textTransform: 'uppercase'
                   }}
                 >
-                  {link.name}
-                </a>
-                <div className="nav-flatline-container">
-                  <svg viewBox="0 0 100 10" preserveAspectRatio="none" style={{ width: '100%', height: '100%', display: 'block' }}>
-                    {/* Grey static baseline */}
-                    <path d="M 0 5 H 40 L 45 1 L 50 9 L 55 5 H 100" fill="none" stroke="rgba(33,34,36,0.1)" strokeWidth="1.2" />
-                    {/* Gold active heartbeat sweep */}
-                    <path className={`nav-flatline-pulse ${isLinkActive ? 'active' : ''}`} d="M 0 5 H 40 L 45 1 L 50 9 L 55 5 H 100" fill="none" stroke="var(--accent)" strokeWidth="1.8" />
-                  </svg>
-                </div>
-              </div>
-            );
-          })}
+                  <span>{language === 'hy' ? 'Ավելին' : language === 'ru' ? 'Еще' : 'More'}</span>
+                  <span style={{ fontSize: '0.65rem' }}>▼</span>
+                </button>
+                {moreDropdownOpen && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '120%',
+                      left: 0,
+                      backgroundColor: 'var(--bg-primary)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '12px',
+                      boxShadow: 'var(--shadow-md)',
+                      padding: '0.5rem',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.2rem',
+                      minWidth: '150px',
+                      zIndex: 1002,
+                      animation: 'fadeIn 0.2s ease-out'
+                    }}
+                  >
+                    {dropdownLinks.map((link) => {
+                      const isLinkActive = 
+                        (link.href === '#about' && currentPage === 'about') ||
+                        (link.href === '#blog' && currentPage === 'blog');
 
-          {dropdownLinks.length > 0 && (
-            <div ref={moreRef} style={{ position: 'relative', zIndex: 1 }}>
+                      return (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          onClick={(e) => {
+                            setMoreDropdownOpen(false);
+                            handleNavLinkClick(e, link.href);
+                          }}
+                          style={{
+                            display: 'block',
+                            padding: '0.5rem 0.8rem',
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            color: isLinkActive ? 'var(--accent)' : 'var(--text-primary)',
+                            textDecoration: 'none',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.05em',
+                            borderRadius: '8px',
+                            backgroundColor: isLinkActive ? 'rgba(242, 183, 5, 0.1)' : 'transparent',
+                            transition: 'var(--transition-fast)'
+                          }}
+                        >
+                          {link.name}
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Desktop Actions Container (Right) */}
+        {!isMobile && (
+          <div 
+            className="desktop-actions-menu"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              flexShrink: 0
+            }}
+          >
+            {/* Desktop Language Switcher Dropdown */}
+            <div ref={dropdownRef} style={{ position: 'relative' }}>
               <button
-                onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                className="lang-dropdown-btn"
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: isTabletNarrow ? '11px' : '13px',
-                  fontWeight: 700,
-                  color: 'var(--text-primary)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  cursor: 'pointer',
-                  padding: '0.2rem 0',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.3rem',
-                  outline: 'none'
+                  gap: '0.4rem',
+                  backgroundColor: scrolled ? 'var(--bg-secondary)' : 'rgba(253, 252, 247, 0.5)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--border)',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '20px',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 700,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  transition: 'var(--transition-fast)'
                 }}
               >
-                <span>{language === 'hy' ? 'Ավելին' : language === 'ru' ? 'Еще' : 'More'}</span>
-                <span style={{ fontSize: '0.65rem' }}>▼</span>
+                <span>{flags[language]}</span>
+                <span style={{ textTransform: 'uppercase' }}>{language}</span>
+                <span style={{ fontSize: '0.6rem', marginLeft: '2px', opacity: 0.7 }}>▼</span>
               </button>
-              {moreDropdownOpen && (
+
+              {langDropdownOpen && (
                 <div
                   style={{
                     position: 'absolute',
@@ -450,314 +551,225 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
                     border: '1px solid var(--border)',
                     borderRadius: '12px',
                     boxShadow: 'var(--shadow-md)',
-                    padding: '0.5rem',
+                    padding: '0.4rem',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: '0.2rem',
-                    minWidth: '150px',
+                    minWidth: '130px',
                     zIndex: 1002,
                     animation: 'fadeIn 0.2s ease-out'
                   }}
                 >
-                  {dropdownLinks.map((link) => {
-                    const isLinkActive = 
-                      (link.href === '#about' && currentPage === 'about') ||
-                      (link.href === '#blog' && currentPage === 'blog');
-
-                    return (
-                      <a
-                        key={link.href}
-                        href={link.href}
-                        onClick={(e) => {
-                          setMoreDropdownOpen(false);
-                          handleNavLinkClick(e, link.href);
-                        }}
-                        style={{
-                          display: 'block',
-                          padding: '0.5rem 0.8rem',
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: '12px',
-                          fontWeight: 700,
-                          color: isLinkActive ? 'var(--accent)' : 'var(--text-primary)',
-                          textDecoration: 'none',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.05em',
-                          borderRadius: '8px',
-                          backgroundColor: isLinkActive ? 'rgba(242, 183, 5, 0.1)' : 'transparent',
-                          transition: 'var(--transition-fast)'
-                        }}
-                      >
-                        {link.name}
-                      </a>
-                    );
-                  })}
+                  {allLanguages.map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => {
+                        changeLanguage(lang);
+                        setLangDropdownOpen(false);
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.6rem',
+                        padding: '0.5rem 0.8rem',
+                        width: '100%',
+                        border: 'none',
+                        background: language === lang ? 'var(--bg-secondary)' : 'transparent',
+                        color: 'var(--text-primary)',
+                        fontFamily: 'var(--font-sans)',
+                        fontSize: '0.85rem',
+                        fontWeight: language === lang ? 700 : 500,
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'var(--transition-fast)'
+                      }}
+                    >
+                      <span>{flags[lang]}</span>
+                      <span>{langNames[lang]}</span>
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
-          )}
-        </div>
 
-        {/* Desktop Actions Container (Right) */}
-        <div 
-          className="desktop-actions-menu"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-            flexShrink: 0
-          }}
-        >
-          {/* Desktop Language Switcher Dropdown */}
-          <div ref={dropdownRef} style={{ position: 'relative' }}>
+            {/* Bonus Button */}
             <button
-              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-              className="lang-dropdown-btn"
+              onClick={onOpenBonus}
+              className="btn-secondary btn-bonus-gift"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.4rem',
-                backgroundColor: scrolled ? 'var(--bg-secondary)' : 'rgba(253, 252, 247, 0.5)',
+                backgroundColor: 'var(--accent)',
                 color: 'var(--text-primary)',
-                border: '1px solid var(--border)',
-                padding: '0.4rem 0.8rem',
-                borderRadius: '20px',
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 700,
+                border: 'none',
+                padding: '0.5rem 1.2rem',
+                borderRadius: '30px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
                 fontSize: '0.85rem',
                 cursor: 'pointer',
-                transition: 'var(--transition-fast)'
+                boxShadow: '0 4px 10px rgba(242, 183, 5, 0.25)',
+                transition: 'var(--transition-smooth)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 15px rgba(242, 183, 5, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 10px rgba(242, 183, 5, 0.25)';
               }}
             >
-              <span>{flags[language]}</span>
-              <span style={{ textTransform: 'uppercase' }}>{language}</span>
-              <span style={{ fontSize: '0.6rem', marginLeft: '2px', opacity: 0.7 }}>▼</span>
+              <Gift size={16} className="gift-icon-class" />
+              <span>{t('nav.bonus')}</span>
             </button>
-
-            {langDropdownOpen && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '120%',
-                  right: 0,
-                  backgroundColor: 'var(--bg-primary)',
-                  border: '1px solid var(--border)',
-                  borderRadius: '12px',
-                  boxShadow: 'var(--shadow-md)',
-                  padding: '0.5rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.2rem',
-                  minWidth: '130px',
-                  zIndex: 1001,
-                  animation: 'fadeIn 0.2s ease-out'
-                }}
-              >
-                {Object.keys(flags).map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => {
-                      setLanguage(lang);
-                      setLangDropdownOpen(false);
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.6rem',
-                      padding: '0.5rem 0.8rem',
-                      width: '100%',
-                      border: 'none',
-                      background: language === lang ? 'var(--bg-secondary)' : 'transparent',
-                      color: 'var(--text-primary)',
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: '0.85rem',
-                      fontWeight: language === lang ? 700 : 500,
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      transition: 'var(--transition-fast)'
-                    }}
-                  >
-                    <span>{flags[lang]}</span>
-                    <span>{langNames[lang]}</span>
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
-
-
-          {/* Bonus Button */}
-          <button
-            onClick={onOpenBonus}
-            className="btn-secondary btn-bonus-gift"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              backgroundColor: 'var(--accent)',
-              color: 'var(--text-primary)',
-              border: 'none',
-              padding: '0.5rem 1.2rem',
-              borderRadius: '30px',
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 800,
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              boxShadow: '0 4px 10px rgba(242, 183, 5, 0.25)',
-              transition: 'var(--transition-smooth)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 15px rgba(242, 183, 5, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 10px rgba(242, 183, 5, 0.25)';
-            }}
-          >
-            <Gift size={16} className="gift-icon-class" />
-            <span>{t('nav.bonus')}</span>
-          </button>
-        </div>
+        )}
 
         {/* Mobile Toggle / Actions Wrapper */}
-        <div 
-          className="mobile-actions-wrapper"
-          style={{
-            display: 'none',
-            alignItems: 'center',
-            gap: '0.8rem'
-          }}
-        >
-          {/* Mobile Language Switcher (Icon-only e.g. EN) */}
-          <div ref={mobileDropdownRef} style={{ position: 'relative' }}>
-            <button
-              onClick={() => setMobileLangDropdownOpen(!mobileLangDropdownOpen)}
-              className="lang-dropdown-btn"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: scrolled ? 'var(--bg-secondary)' : 'rgba(253, 252, 247, 0.5)',
-                color: 'var(--text-primary)',
-                border: '1px solid var(--border)',
-                width: '34px',
-                height: '34px',
-                borderRadius: '50%',
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 800,
-                fontSize: '0.75rem',
-                cursor: 'pointer',
-                textTransform: 'uppercase',
-                outline: 'none',
-                transition: 'var(--transition-fast)'
-              }}
-            >
-              {language}
-            </button>
-            {mobileLangDropdownOpen && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '120%',
-                  right: 0,
-                  backgroundColor: 'var(--bg-primary)',
-                  border: '1px solid var(--border)',
-                  borderRadius: '12px',
-                  boxShadow: 'var(--shadow-md)',
-                  padding: '0.4rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '0.2rem',
-                  minWidth: '110px',
-                  zIndex: 1001,
-                  animation: 'fadeIn 0.2s ease-out'
-                }}
-              >
-                {Object.keys(flags).map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => {
-                      setLanguage(lang);
-                      setMobileLangDropdownOpen(false);
-                    }}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      padding: '0.4rem 0.6rem',
-                      width: '100%',
-                      border: 'none',
-                      background: language === lang ? 'var(--bg-secondary)' : 'transparent',
-                      color: 'var(--text-primary)',
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: '0.8rem',
-                      fontWeight: language === lang ? 700 : 500,
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      textAlign: 'left'
-                    }}
-                  >
-                    <span>{flags[lang]}</span>
-                    <span style={{ textTransform: 'uppercase' }}>{lang}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <button
-            className={`mobile-toggle ${isOpen ? 'open' : ''}`}
-            onClick={() => setIsOpen(!isOpen)}
+        {isMobile && (
+          <div 
+            className="mobile-actions-wrapper"
             style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              width: '24px',
-              height: '18px',
-              padding: 0,
-              position: 'relative',
-              zIndex: 1002,
-              color: 'var(--text-primary)'
+              alignItems: 'center',
+              gap: '0.8rem'
             }}
           >
-            <span 
-              className="burger-span"
+            {/* Mobile Language Switcher (Icon-only e.g. EN) */}
+            <div ref={mobileDropdownRef} style={{ position: 'relative' }}>
+              <button
+                onClick={() => setMobileLangDropdownOpen(!mobileLangDropdownOpen)}
+                className="lang-dropdown-btn"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: scrolled ? 'var(--bg-secondary)' : 'rgba(253, 252, 247, 0.5)',
+                  color: 'var(--text-primary)',
+                  border: '1px solid var(--border)',
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '50%',
+                  fontFamily: 'var(--font-sans)',
+                  fontWeight: 800,
+                  fontSize: '0.75rem',
+                  cursor: 'pointer',
+                  transition: 'var(--transition-fast)'
+                }}
+              >
+                <span style={{ textTransform: 'uppercase' }}>{language}</span>
+              </button>
+
+              {mobileLangDropdownOpen && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '120%',
+                    right: 0,
+                    backgroundColor: 'var(--bg-primary)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '12px',
+                    boxShadow: 'var(--shadow-md)',
+                    padding: '0.4rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.2rem',
+                    minWidth: '110px',
+                    zIndex: 1002,
+                    animation: 'fadeIn 0.2s ease-out'
+                  }}
+                >
+                  {allLanguages.map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => {
+                        changeLanguage(lang);
+                        setMobileLangDropdownOpen(false);
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.6rem',
+                        padding: '0.5rem 0.8rem',
+                        width: '100%',
+                        border: 'none',
+                        background: language === lang ? 'var(--bg-secondary)' : 'transparent',
+                        color: 'var(--text-primary)',
+                        fontFamily: 'var(--font-sans)',
+                        fontSize: '0.85rem',
+                        fontWeight: language === lang ? 700 : 500,
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                        transition: 'var(--transition-fast)'
+                      }}
+                    >
+                      <span>{flags[lang]}</span>
+                      <span>{langNames[lang]}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Burger toggle button */}
+            <button
+              className={`mobile-toggle ${isOpen ? 'open' : ''}`}
+              onClick={() => setIsOpen(!isOpen)}
               style={{
-                width: '100%',
-                height: '2px',
-                backgroundColor: 'currentColor',
-                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                transform: isOpen ? 'translateY(8px) rotate(45deg)' : 'none',
-                transformOrigin: 'center'
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                width: '24px',
+                height: '18px',
+                padding: 0,
+                position: 'relative',
+                zIndex: 1002,
+                color: 'var(--text-primary)'
               }}
-            />
-            <span 
-              className="burger-span"
-              style={{
-                width: '100%',
-                height: '2px',
-                backgroundColor: 'currentColor',
-                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                opacity: isOpen ? 0 : 1
-              }}
-            />
-            <span 
-              className="burger-span"
-              style={{
-                width: '100%',
-                height: '2px',
-                backgroundColor: 'currentColor',
-                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                transform: isOpen ? 'translateY(-8px) rotate(-45deg)' : 'none',
-                transformOrigin: 'center'
-              }}
-            />
-          </button>
-        </div>
+            >
+              <span 
+                className="burger-span"
+                style={{
+                  width: '100%',
+                  height: '2px',
+                  backgroundColor: 'currentColor',
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transform: isOpen ? 'translateY(8px) rotate(45deg)' : 'none',
+                  transformOrigin: 'center'
+                }}
+              />
+              <span 
+                className="burger-span"
+                style={{
+                  width: '100%',
+                  height: '2px',
+                  backgroundColor: 'currentColor',
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                  opacity: isOpen ? 0 : 1
+                }}
+              />
+              <span 
+                className="burger-span"
+                style={{
+                  width: '100%',
+                  height: '2px',
+                  backgroundColor: 'currentColor',
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transform: isOpen ? 'translateY(-8px) rotate(-45deg)' : 'none',
+                  transformOrigin: 'center'
+                }}
+              />
+            </button>
+          </div>
+        )}
+
       </div>
 
       {/* Mobile Drawer menu */}
@@ -793,7 +805,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
               textAlign: 'center'
             }}
           >
-            {navLinks.map((link) => (
+            {allNavLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
