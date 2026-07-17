@@ -560,11 +560,11 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
                     animation: 'fadeIn 0.2s ease-out'
                   }}
                 >
-                  {allLanguages.map((lang) => (
+                  {Object.keys(flags).map((lang) => (
                     <button
                       key={lang}
                       onClick={() => {
-                        changeLanguage(lang);
+                        setLanguage(lang);
                         setLangDropdownOpen(false);
                       }}
                       style={{
@@ -682,11 +682,11 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
                     animation: 'fadeIn 0.2s ease-out'
                   }}
                 >
-                  {allLanguages.map((lang) => (
+                  {Object.keys(flags).map((lang) => (
                     <button
                       key={lang}
                       onClick={() => {
-                        changeLanguage(lang);
+                        setLanguage(lang);
                         setMobileLangDropdownOpen(false);
                       }}
                       style={{
