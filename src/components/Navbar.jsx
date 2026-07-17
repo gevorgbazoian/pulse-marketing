@@ -805,29 +805,38 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
               textAlign: 'center'
             }}
           >
-            {allNavLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="mobile-drawer-link"
-                onClick={(e) => {
-                  setIsOpen(false);
-                  handleNavLinkClick(e, link.href);
-                }}
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '1.4rem',
-                  fontWeight: 800,
-                  color: 'var(--text-primary)',
-                  textDecoration: 'none',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  transition: 'color 0.3s ease'
-                }}
-              >
-                {link.name}
-              </a>
-            ))}
+            {allNavLinks.map((link) => {
+              const isLinkActive = 
+                (link.href === '#services' && currentPage === 'services') ||
+                (link.href === '#results' && currentPage === 'results') ||
+                (link.href === '#about' && currentPage === 'about') ||
+                (link.href === '#blog' && currentPage === 'blog') ||
+                (link.href === '#contact' && currentPage === 'contact');
+
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="mobile-drawer-link"
+                  onClick={(e) => {
+                    setIsOpen(false);
+                    handleNavLinkClick(e, link.href);
+                  }}
+                  style={{
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '1.4rem',
+                    fontWeight: 800,
+                    color: isLinkActive ? 'var(--accent)' : '#FAF6F1',
+                    textDecoration: 'none',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    transition: 'color 0.3s ease'
+                  }}
+                >
+                  {link.name}
+                </a>
+              );
+            })}
           </div>
 
           {/* Mobile Language Switcher Row */}
@@ -844,7 +853,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
               width: '200px'
             }}
           >
-            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'rgba(255, 255, 255, 0.45)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               {language === 'hy' ? 'Լեզու' : language === 'ru' ? 'Язык' : 'Language'}
             </span>
             <div style={{ display: 'flex', gap: '0.6rem' }}>
@@ -864,7 +873,7 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
                     borderColor: language === lang ? 'var(--accent)' : 'rgba(255, 255, 255, 0.1)',
                     borderRadius: '20px',
                     backgroundColor: language === lang ? 'rgba(242, 183, 5, 0.15)' : 'rgba(255, 255, 255, 0.03)',
-                    color: 'var(--text-primary)',
+                    color: language === lang ? 'var(--accent)' : '#FAF6F1',
                     fontFamily: 'var(--font-sans)',
                     fontSize: '0.85rem',
                     fontWeight: 700,
@@ -914,6 +923,9 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(4px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        .mobile-toggle.open {
+          color: #FAF6F1 !important;
         }
         @media (max-width: 820px) {
           .desktop-links-menu,
