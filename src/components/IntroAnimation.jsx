@@ -72,14 +72,11 @@ export default function IntroAnimation({ onRenderSite, onComplete }) {
       transformOrigin: 'center center' 
     });
 
-    let tl;
-
-    document.fonts.ready.then(() => {
-      tl = gsap.timeline({
-        onComplete: () => {
-          onCompleteRef.current();
-        }
-      });
+    const tl = gsap.timeline({
+      onComplete: () => {
+        onCompleteRef.current();
+      }
+    });
 
       // Helper function to trigger heartbeat flash
       const triggerFlash = (intensity = 0.08) => {
@@ -234,10 +231,8 @@ export default function IntroAnimation({ onRenderSite, onComplete }) {
         duration: 0.75,
         ease: 'power3.inOut'
       }, 'lock+=0.9');
-    });
-
     return () => {
-      if (tl) tl.kill();
+      tl.kill();
     };
   }, []);
 
