@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse Marketing - 20/10 Բիո-Թվային Ինտերակտիվ Փորձառություն</title>
+    
+    <!-- Tailwind CSS բարձրակարգ ոճավորման համար -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Urbanist & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=Urbanist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome պատկերակների համար -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- GSAP անիմացիոն timelines-ի համար -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Urbanist', sans-serif;
+            background-color: #030303;
+            color: #FAF6F1;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Ողորկ էջի սահմանափակում՝ անցանկալի scrollbar-երը թաքցնելու համար */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Տիեզերական ֆոնային փոշի/մասնիկներ */
+        .cosmic-particle {
+            position: absolute;
+            background: rgba(255, 204, 0, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Premium Glassmorphic Անվճար Աուդիտ կոճակ նեոնային եզրագծով */
+        .btn-free-audit {
+            background: transparent;
+            border: 1.5px solid rgba(255, 204, 0, 0.35);
+            color: #FFCC00;
+            text-shadow: 0 0 8px rgba(255, 204, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-free-audit:hover {
+            background-color: #FFCC00;
+            color: #000000;
+            border-color: #FFCC00;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 204, 0, 0.3);
+        }
+
+        /* SMM ինտերակտիվ սրտիկների փոփ-անիմացիա */
+        .smm-pop {
+            position: absolute;
+            pointer-events: none;
+            animation: smmPopUp 0.8s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+            z-index: 40;
+        }
+
+        @keyframes smmPopUp {
+            0% { transform: translate(-50%, -50%) scale(0.4) translateY(0); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1.4) translateY(-80px); opacity: 0; }
+        }
+
+        /* Holographic laser scanning line for Branding card */
+        @keyframes laserSweep {
+            0% { top: -10%; opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { top: 110%; opacity: 0; }
+        }
+
+        .laser-glow-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(255, 204, 0, 0.8), transparent);
+            box-shadow: 0 0 12px rgba(255, 204, 0, 0.8);
+            left: 0;
+            top: -10%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .card-branding:hover .laser-glow-line {
+            animation: laserSweep 2s infinite linear;
+        }
+
+        /* 3D orbit rotation for CGI card */
+        .perspective-container {
+            perspective: 800px;
+        }
+
+        .orbit-ring-x {
+            border: 1.5px dashed rgba(46, 204, 113, 0.4);
+            transform: rotateX(75deg) rotateY(15deg);
+            transform-style: preserve-3d;
+        }
+
+        .card-cgi:hover .orbit-ring-x {
+            animation: rotateRingX 8s infinite linear;
+        }
+
+        .orbit-ring-y {
+            border: 1.5px dashed rgba(46, 204, 113, 0.3);
+            transform: rotateX(15deg) rotateY(75deg);
+            transform-style: preserve-3d;
+        }
+
+        .card-cgi:hover .orbit-ring-y {
+            animation: rotateRingY 6s infinite linear;
+        }
+
+        @keyframes rotateRingX {
+            0% { transform: rotateX(75deg) rotateY(15deg) rotateZ(0deg); }
+            100% { transform: rotateX(75deg) rotateY(15deg) rotateZ(360deg); }
+        }
+
+        @keyframes rotateRingY {
+            0% { transform: rotateX(15deg) rotateY(75deg) rotateZ(360deg); }
+            100% { transform: rotateX(15deg) rotateY(75deg) rotateZ(0deg); }
+        }
+
+        /* Card 3D tilt effect */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
+        /* Interactive Bio-Grid Canvas */
+        #ekg-grid-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between overflow-x-hidden lg:h-screen lg:overflow-hidden bg-[#030303] no-scrollbar">
+
+    <!-- Transition Loader Overlay -->
+    <div id="loader-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-[#050505]">
+        <div class="relative w-72 h-72 sm:w-80 sm:h-80 flex items-center justify-center">
+            
+            <!-- Thin golden ring -->
+            <svg class="absolute w-56 h-56 sm:w-64 sm:h-64" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" stroke="rgba(255, 204, 0, 0.25)" stroke-width="0.75" fill="none" />
+            </svg>
+
+            <!-- Center yellow glow -->
+            <div id="loader-glow" class="absolute w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#FFCC00] opacity-25 blur-xl transition-all duration-300"></div>
+
+            <!-- EKG red laser path and yellow core -->
+            <svg class="w-full h-full z-10" viewBox="0 0 300 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path id="ekg-laser" d="M10,50 L120,50 L130,25 L140,75 L150,50 L290,50" 
+                      stroke="#FF3333" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+                <circle id="ekg-pulse-dot" cx="150" cy="50" r="8" fill="#FFCC00" />
+            </svg>
+
+            <!-- Loading text descriptor -->
+            <span class="absolute bottom-4 text-[9px] sm:text-[10px] font-bold tracking-[0.3em] text-gray-500 uppercase">Ներարկում ենք Բրենդի Զարկը...</span>
+        </div>
+    </div>
+
+    <!-- Interactive EKG Grid (Canvas) -->
+    <canvas id="ekg-grid-canvas"></canvas>
+
+    <!-- Subtle ambient background neon glows -->
+    <div id="ambient-yellow" class="absolute top-1/4 left-1/4 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] rounded-full bg-[#FFCC00] opacity-[0.03] blur-[100px] sm:blur-[150px] pointer-events-none z-0"></div>
+    <div id="ambient-green" class="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] rounded-full bg-[#2ECC71] opacity-[0.02] blur-[120px] sm:blur-[180px] pointer-events-none z-0"></div>
+
+    <!-- Mobile Menu Drawer (Fixed Overlay) -->
+    <div id="mobile-menu" class="fixed inset-0 bg-[#030303]/98 backdrop-blur-xl z-40 hidden flex-col justify-center items-center opacity-0 pointer-events-none transition-all duration-300">
+        <div class="flex flex-col items-center gap-6 text-center">
+            <a href="#" onclick="toggleMobileMenu()" class="text-xl font-bold tracking-widest hover:text-[#FFCC00] transition-colors">ԳՈՐԾԸՆԿԵՐՆԵՐ</a>
+            <a href="#" onclick="toggleMobileMenu()" class="text-xl font-bold tracking-widest hover:text-[#FFCC00] transition-colors">ԱՐԴՅՈՒՆՔՆԵՐ</a>
+            <a href="#" onclick="toggleMobileMenu()" class="text-xl font-bold tracking-widest text-[#FFCC00] transition-colors">ԾԱՌԱՅՈՒԹՅՈՒՆՆԵՐ</a>
+            <a href="#" onclick="toggleMobileMenu()" class="text-xl font-bold tracking-widest hover:text-[#FFCC00] transition-colors">ՄԵՐ ՄԱՍԻՆ</a>
+            <a href="#" onclick="toggleMobileMenu()" class="text-xl font-bold tracking-widest hover:text-[#FFCC00] transition-colors">ԲԼՈԳ</a>
+            <a href="#" onclick="toggleMobileMenu()" class="text-xl font-bold tracking-widest hover:text-[#FFCC00] transition-colors">ԿԱՊ</a>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="app-content" class="relative flex-grow flex flex-col justify-between min-h-screen lg:h-full opacity-0 z-10">
+
+        <!-- NAVBAR -->
+        <nav class="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between z-50">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-2 sm:gap-2.5 group">
+                <div class="relative w-9 h-10 sm:w-10 sm:h-10 flex items-center justify-center bg-gradient-to-tr from-[#FFCC00] to-[#FF3333] rounded-full shadow-lg shadow-[#FFCC00]/25 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                    <svg class="w-4 h-4 sm:w-5 sm:h-5 text-black" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 3h6a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H9v6H6V3zm3 3v6h3a3 3 0 0 0 3-3v0a3 3 0 0 0-3-3H9z"/>
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-lg sm:text-xl font-extrabold tracking-wider text-[#FAF6F1] drop-shadow-[0_0_12px_rgba(255,204,0,0.45)]">PULSE</span>
+                    <span class="text-[8px] sm:text-[9px] font-bold tracking-[0.25em] text-gray-400 -mt-1 uppercase">Marketing</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <div class="hidden lg:flex items-center gap-0.5 bg-white/5 border border-white/10 backdrop-blur-md px-2 py-0.5 rounded-full shadow-inner">
+                <a href="#" class="px-3.5 py-1.5 text-[11px] font-bold text-gray-300 hover:text-white transition-all tracking-wider uppercase">ԳՈՐԾԸՆԿԵՐՆԵՐ</a>
+                <a href="#" class="px-3.5 py-1.5 text-[11px] font-bold text-gray-300 hover:text-white transition-all tracking-wider uppercase">ԱՐԴՅՈՒՆՔՆԵՐ</a>
+                <a href="#" class="px-3.5 py-1.5 text-[11px] font-bold text-white bg-white/10 rounded-full shadow-sm tracking-wider uppercase">ԾԱՌԱՅՈՒԹՅՈՒՆՆԵՐ</a>
+                <a href="#" class="px-3.5 py-1.5 text-[11px] font-bold text-gray-300 hover:text-white transition-all tracking-wider uppercase">ՄԵՐ ՄԱՍԻՆ</a>
+                <a href="#" class="px-3.5 py-1.5 text-[11px] font-bold text-gray-300 hover:text-white transition-all tracking-wider uppercase">ԲԼՈԳ</a>
+                <a href="#" class="px-3.5 py-1.5 text-[11px] font-bold text-gray-300 hover:text-white transition-all tracking-wider uppercase">ԿԱՊ</a>
+            </div>
+
+            <!-- Right Navbar Buttons -->
+            <div class="flex items-center gap-3">
+                <a href="#" class="hidden sm:inline-block px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-[#FFCC00] to-[#E0A800] text-black font-extrabold text-[10px] sm:text-xs tracking-wider rounded-full hover:shadow-xl hover:shadow-[#FFCC00]/20 transform hover:-translate-y-0.5 transition-all duration-300 uppercase">
+                    ԿԱՊ
+                </a>
+                
+                <!-- Burger Button with SVG animated path markers -->
+                <button onclick="toggleMobileMenu()" class="lg:hidden relative w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white hover:text-[#FFCC00] focus:outline-none z-50">
+                    <svg id="burger-icon" class="w-5 h-5 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path id="burger-path-1" d="M4 6h16" stroke-linecap="round"></path>
+                        <path id="burger-path-2" d="M4 12h16" stroke-linecap="round"></path>
+                        <path id="burger-path-3" d="M4 18h16" stroke-linecap="round"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- HERO MAIN SECTION -->
+        <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-8 lg:gap-6 z-10 py-6 lg:py-0">
+            
+            <!-- LEFT COLUMN -->
+            <div class="w-full lg:w-[45%] flex flex-col justify-center text-left space-y-4 sm:space-y-5">
+                <div class="inline-flex items-center gap-2.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full w-fit">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2ECC71] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#2ECC71]"></span>
+                    </span>
+                    <span class="text-[10px] sm:text-xs font-extrabold tracking-widest text-[#2ECC71] uppercase">SMM և Բրենդինգ Գործակալություն</span>
+                </div>
+
+                <h1 id="hero-heading" class="text-3xl sm:text-4xl md:text-5xl lg:text-[2.8rem] xl:text-[3.2rem] leading-[1.1] font-black text-[#FAF6F1] tracking-tight">
+                    Բարձրացնելով <br class="hidden lg:block" />
+                    Ձեր Բրենդի <br />
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#FFCC00] via-[#FF3333] to-[#2ECC71] drop-shadow-[0_0_35px_rgba(255,204,0,0.35)] inline-block">Զարկերը</span>
+                </h1>
+
+                <p id="hero-desc" class="text-gray-400 text-xs sm:text-sm lg:text-[0.9rem] xl:text-[0.95rem] max-w-lg leading-relaxed font-semibold">
+                    Pulse-ում մենք անցնում ենք ստանդարտ մարքեթինգային սահմաններից։ Մենք համատեղում ենք ինքնատիպ գաղաղափարները, անհատականացված SMM-ը, 3D ոճի CGI անիմացիան, բրենդինգը և բարձր արդյունավետության թիրախավորումը։
+                </p>
+
+                <div id="hero-buttons" class="flex items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
+                    <button class="px-6 sm:px-8 py-3 bg-gradient-to-r from-[#FFCC00] to-[#E0A800] text-black font-extrabold text-[10px] sm:text-xs tracking-wider rounded-full hover:shadow-2xl hover:shadow-[#FFCC00]/30 transform hover:-translate-y-1 transition-all duration-300 uppercase">
+                        ԾԱՌԱՅՈՒԹՅՈՒՆՆԵՐ
+                    </button>
+                    <button class="btn-free-audit px-6 sm:px-8 py-3 text-[10px] sm:text-xs font-extrabold tracking-wider rounded-full uppercase">
+                        ԱՆՎՃԱՐ ԱՈՒԴԻՏ
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN (Cardiac Magnetic Assembly Cards) -->
+            <div id="services-grid" class="w-full lg:w-[53%] grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-3 xl:gap-4 pb-12 lg:pb-0">
+                
+                <!-- CARD 1 (SMM) -->
+                <div class="card-smm tilt-card relative bg-zinc-950/60 border border-white/5 rounded-2xl p-4 sm:p-5 flex flex-col justify-between items-center text-center group cursor-pointer hover:border-[#FF3333]/40 hover:bg-zinc-950/90 transition-all duration-500 h-[280px] sm:h-[320px] lg:h-[300px] xl:h-[330px] overflow-hidden">
+                    <div class="card-part corner-tl absolute top-2 left-2 w-3.5 h-3.5 border-t-2 border-l-2 border-[#FF3333] opacity-0 pointer-events-none"></div>
+                    <div class="card-part corner-tr absolute top-2 right-2 w-3.5 h-3.5 border-t-2 border-r-2 border-[#FF3333] opacity-0 pointer-events-none"></div>
+                    <div class="card-part corner-bl absolute bottom-2 left-2 w-3.5 h-3.5 border-b-2 border-l-2 border-[#FF3333] opacity-0 pointer-events-none"></div>
+                    <div class="card-part corner-br absolute bottom-2 right-2 w-3.5 h-3.5 border-b-2 border-r-2 border-[#FF3333] opacity-0 pointer-events-none"></div>
+                    <div id="smm-particle-container" class="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none"></div>
+
+                    <div class="card-part internal-visual relative w-full aspect-square max-h-[140px] sm:max-h-[160px] lg:max-h-[135px] xl:max-h-[155px] flex items-center justify-center bg-black/40 rounded-xl overflow-hidden mb-2 p-3 opacity-0">
+                        <svg class="w-12 h-12 sm:w-14 sm:h-14 lg:w-11 xl:w-14 text-[#FF3333] transform group-hover:scale-110 transition-transform duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="5" y="2" width="14" height="20" rx="3" />
+                            <circle cx="12" cy="18" r="1" fill="currentColor" />
+                            <path class="fill-current text-[#FF3333]" d="M12 7.63l-.73-.66C8.68 4.7 6 2.14 6 2.14S3.32 4.7 3.32 7.63c0 2.21 1.79 4 4 4 1.25 0 2.38-.57 3.12-1.46.74.89 1.87 1.46 3.12 1.46 2.21 0 4-1.79 4-4 0-2.93-2.68-5.49-2.68-5.49s-2.68 2.56-2.68 5.49z" transform="translate(4, 4) scale(0.4)"/>
+                        </svg>
+                    </div>
+                    <div class="card-part internal-text space-y-1 z-10 opacity-0">
+                        <h3 class="text-[11px] sm:text-xs font-extrabold tracking-wider text-gray-200 group-hover:text-[#FF3333] transition-colors uppercase">ՍՈՑԻԱԼԱԿԱՆ ՄԵԴԻԱ</h3>
+                        <p class="text-[9px] sm:text-[10px] text-gray-500 group-hover:text-gray-300 leading-normal transition-colors">Սոցցանցերի աճ և կրեատիվ կոնտենտի ստեղծում:</p>
+                    </div>
+                </div>
+
+                <!-- CARD 2 (BRANDING) -->
+                <div class="card-branding tilt-card relative bg-zinc-950/60 border border-white/5 rounded-2xl p-4 sm:p-5 flex flex-col justify-between items-center text-center group cursor-pointer hover:border-[#FFCC00]/40 hover:bg-zinc-950/90 transition-all duration-500 h-[280px] sm:h-[320px] lg:h-[300px] xl:h-[330px] overflow-hidden">
+                    <div class="card-part corner-tl absolute top-2 left-2 w-3.5 h-3.5 border-t-2 border-l-2 border-[#FFCC00] opacity-0 pointer-events-none"></div>
+                    <div class="card-part corner-tr absolute top-2 right-2 w-3.5 h-3.5 border-t-2 border-r-2 border-[#FFCC00] opacity-0 pointer-events-none"></div>
+                    <div class="card-part corner-bl absolute bottom-2 left-2 w-3.5 h-3.5 border-b-2 border-l-2 border-[#FFCC00] opacity-0 pointer-events-none"></div>
+                    <div class="card-part corner-br absolute bottom-2 right-2 w-3.5 h-3.5 border-b-2 border-r-2 border-[#FFCC00] opacity-0 pointer-events-none"></div>
+                    <div class="laser-glow-line"></div>
+
+                    <div class="card-part internal-visual relative w-full aspect-square max-h-[140px] sm:max-h-[160px] lg:max-h-[135px] xl:max-h-[155px] flex items-center justify-center bg-black/40 rounded-xl overflow-hidden mb-2 p-3 opacity-0">
+                        <svg class="w-12 h-12 sm:w-14 sm:h-14 lg:w-11 xl:w-14 text-[#FFCC00] transform group-hover:scale-110 transition-transform duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4H6z" />
+                            <path d="M3 6h18" />
+                            <path d="M16 10a4 4 0 0 1-8 0" />
+                        </svg>
+                    </div>
+                    <div class="card-part internal-text space-y-1 z-10 opacity-0">
+                        <h3 class="text-[11px] sm:text-xs font-extrabold tracking-wider text-[#FAF6F1]/80 group-hover:text-[#FFCC00] transition-colors uppercase">ԲՐԵՆԴԻՆԳ</h3>
+                        <p class="text-[9px] sm:text-[10px] text-gray-500 group-hover:text-gray-300 leading-normal transition-colors">Լոգո, բրենդբուք և կորպորատիվ ոճի ստեղծում:</p>
+                    </div>
+                </div>
+
+                <!-- CARD 3 (CGI) -->
+                <div class="card-cgi tilt-card relative bg-zinc-950/60 border border-white/5 rounded-2xl p-4 sm:p-5 flex flex-col justify-between items-center text-center group cursor-pointer hover:border-[#2ECC71]/40 hover:bg-zinc-950/90 transition-all duration-500 h-[280px] sm:h-[320px] lg:h-[300px] xl:h-[330px] overflow-hidden">
+                    <div class="card-part corner-tl absolute top-2 left-2 w-3.5 h-3.5 border-t-2 border-l-2 border-[#2ECC71] opacity-0 pointer-events-none"></div>
+                    <div class="card-part corner-tr absolute top-2 right-2 w-3.5 h-3.5 border-t-2 border-r-2 border-[#2ECC71] opacity-0 pointer-events-none"></div>
+                    <div class="card-part corner-bl absolute bottom-2 left-2 w-3.5 h-3.5 border-b-2 border-l-2 border-[#2ECC71] opacity-0 pointer-events-none"></div>
+                    <div class="card-part corner-br absolute bottom-2 right-2 w-3.5 h-3.5 border-b-2 border-r-2 border-[#2ECC71] opacity-0 pointer-events-none"></div>
+
+                    <div class="card-part internal-visual relative w-full aspect-square max-h-[140px] sm:max-h-[160px] lg:max-h-[135px] xl:max-h-[155px] flex items-center justify-center bg-black/40 rounded-xl overflow-hidden mb-2 p-3 perspective-container opacity-0">
+                        <div class="absolute w-20 h-20 sm:w-24 sm:h-24 lg:w-18 lg:h-18 xl:w-24 xl:h-24 rounded-full orbit-ring-x pointer-events-none transition-all duration-300"></div>
+                        <div class="absolute w-16 h-16 sm:w-20 sm:h-20 lg:w-14 lg:h-14 xl:w-20 xl:h-20 rounded-full orbit-ring-y pointer-events-none transition-all duration-300"></div>
+                        <svg class="w-10 h-10 sm:w-14 sm:h-14 lg:w-9 lg:h-9 xl:w-14 xl:h-14 text-[#2ECC71] drop-shadow-[0_0_15px_rgba(46,204,113,0.4)] transform group-hover:scale-110 group-hover:drop-shadow-[0_0_25px_rgba(46,204,113,0.7)] transition-all duration-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6 3h6a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6H9v6H6V3zm3 3v6h3a3 3 0 0 0 3-3v0a3 3 0 0 0-3-3H9z"/>
+                        </svg>
+                    </div>
+                    <div class="card-part internal-text space-y-1.5 z-10 opacity-0">
+                        <h3 class="text-[11px] sm:text-xs font-extrabold tracking-wider text-gray-200 group-hover:text-[#2ECC71] transition-colors uppercase">3D և ՄՈՇՆ</h3>
+                        <p class="text-[9px] sm:text-[10px] text-gray-500 group-hover:text-gray-300 leading-normal transition-colors">Աչք շոյող 3D մոդելավորում և ժամանակակից շարժում:</p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 lg:py-3 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0 z-30 text-[10px] sm:text-xs text-gray-600 border-t border-white/5 sm:border-0 mt-auto">
+            <div class="text-center sm:text-left">&copy; 2026 Pulse Marketing. Բոլոր իրավունքները պաշտպանված են:</div>
+            <button onclick="triggerIntro()" class="flex items-center gap-2 hover:text-[#FFCC00] transition-colors font-bold uppercase tracking-widest cursor-pointer">
+                <span>Կրկնել Անցումը</span>
+                <i class="fa-solid fa-rotate-right animate-spin-slow"></i>
+            </button>
+            <div class="text-center sm:text-right">Երևան, Հայաստան</div>
+        </footer>
+
+    </div>
+
+    <!-- INTERACTIVE CODE AND GSAP ANIMATIONS -->
+    <script>
+        const canvas = document.getElementById('ekg-grid-canvas');
+        const ctx = canvas.getContext('2d');
+        let mouseX = 0, mouseY = 0;
+        let isMobileMenuOpen = false;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Բարելավված Mobile Burger մենյուի կառավարում GSAP-ով
+        function toggleMobileMenu() {
+            isMobileMenuOpen = !isMobileMenuOpen;
+            const mobileMenu = document.getElementById('mobile-menu');
+            const burgerPath1 = document.getElementById('burger-path-1');
+            const burgerPath2 = document.getElementById('burger-path-2');
+            const burgerPath3 = document.getElementById('burger-path-3');
+
+            if (isMobileMenuOpen) {
+                // Մենյուի բացում
+                gsap.set(mobileMenu, { display: "flex" });
+                gsap.to(mobileMenu, { opacity: 1, pointerEvents: "all", duration: 0.3 });
+                gsap.fromTo("#mobile-menu a", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.4 });
+                
+                gsap.to(burgerPath1, { attr: { d: "M6 18L18 6" }, duration: 0.3 });
+                gsap.to(burgerPath2, { opacity: 0, duration: 0.2 });
+                gsap.to(burgerPath3, { attr: { d: "M6 6l12 12" }, duration: 0.3 });
+            } else {
+                // Մենյուի փակում
+                gsap.to(mobileMenu, { 
+                    opacity: 0, 
+                    pointerEvents: "none", 
+                    duration: 0.3, 
+                    onComplete: () => gsap.set(mobileMenu, { display: "none" }) 
+                });
+                
+                gsap.to(burgerPath1, { attr: { d: "M4 6h16" }, duration: 0.3 });
+                gsap.to(burgerPath2, { opacity: 1, duration: 0.2 });
+                gsap.to(burgerPath3, { attr: { d: "M4 18h16" }, duration: 0.3 });
+            }
+        }
+
+        // Ինտերակտիվ Սինթեզատոր (Սրտի զարկի իրական ձայն - Lub-dub)
+        let audioCtx;
+        function playHeartbeat(frequency = 60, intensity = 0.5) {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                // Lub (Առաջին զարկ)
+                let osc1 = audioCtx.createOscillator();
+                let gain1 = audioCtx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+                osc1.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                gain1.gain.setValueAtTime(intensity, audioCtx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                osc1.connect(gain1);
+                gain1.connect(audioCtx.destination);
+                osc1.start();
+                osc1.stop(audioCtx.currentTime + 0.15);
+
+                // Dub (Երկրորդ զարկ՝ թեթևակի ուշացումով)
+                setTimeout(() => {
+                    let osc2 = audioCtx.createOscillator();
+                    let gain2 = audioCtx.createGain();
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(frequency * 1.2, audioCtx.currentTime);
+                    osc2.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.18);
+                    gain2.gain.setValueAtTime(intensity * 0.8, audioCtx.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.18);
+                    osc2.connect(gain2);
+                    gain2.connect(audioCtx.destination);
+                    osc2.start();
+                    osc2.stop(audioCtx.currentTime + 0.18);
+                }, 150);
+
+            } catch (e) {
+                console.warn('Browser blocks audio until user interaction.');
+            }
+        }
+
+        // EKG Grid animation loop
+        let waveOffset = 0;
+        function animateGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const gridSpacing = window.innerWidth < 768 ? 30 : 40;
+            const amp = window.innerWidth < 768 ? 10 : 18;
+            const speed = 0.08;
+            waveOffset += speed;
+
+            ctx.strokeStyle = 'rgba(255, 204, 0, 0.06)';
+            ctx.lineWidth = 1;
+
+            // Horizontal lines with EKG pulses
+            for (let y = 0; y < canvas.height; y += gridSpacing) {
+                ctx.beginPath();
+                for (let x = 0; x < canvas.width; x += 10) {
+                    const dx = x - mouseX;
+                    const dy = y - mouseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const force = Math.max(0, (150 - dist) / 150);
+
+                    let wave = Math.sin(x * 0.005 + waveOffset) * amp;
+                    if (Math.abs(x - (waveOffset * 100) % canvas.width) < 150) {
+                        wave += Math.sin(x * 0.05) * amp * 1.5;
+                    }
+
+                    const yOffset = wave + (dy * force * 0.35);
+
+                    if (x === 0) ctx.moveTo(x, y + yOffset);
+                    else ctx.lineTo(x, y + yOffset);
+                }
+                ctx.stroke();
+            }
+
+            // Vertical lines
+            ctx.strokeStyle = 'rgba(255, 204, 0, 0.03)';
+            for (let x = 0; x < canvas.width; x += gridSpacing) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            requestAnimationFrame(animateGrid);
+        }
+        requestAnimationFrame(animateGrid);
+
+        // Prep EKG laser lines
+        const ekgLaser = document.getElementById('ekg-laser');
+        const pathLength = ekgLaser.getTotalLength();
+        ekgLaser.style.strokeDasharray = pathLength;
+        ekgLaser.style.strokeDashoffset = pathLength;
+
+        // Card 3D tilt control (Desktop only)
+        if (window.innerWidth > 1024) {
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left - (rect.width / 2);
+                    const y = e.clientY - rect.top - (rect.height / 2);
+                    
+                    gsap.to(card, {
+                        rotateX: -y / 12,
+                        rotateY: x / 12,
+                        transformPerspective: 1000,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        rotateX: 0,
+                        rotateY: 0,
+                        duration: 0.6,
+                        ease: "power4.out"
+                    });
+                });
+            });
+        }
+
+        // Flying SMM icons
+        const smmCard = document.querySelector('.card-smm');
+        const smmPopContainer = document.getElementById('smm-particle-container');
+        const popSymbols = ['❤️', '👍', '🔥', '✨', '💬'];
+
+        smmCard.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.84) {
+                const rect = smmCard.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const particle = document.createElement('span');
+                particle.classList.add('smm-pop');
+                particle.innerText = popSymbols[Math.floor(Math.random() * popSymbols.length)];
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.fontSize = `${Math.random() * 6 + 10}px`;
+                
+                smmPopContainer.appendChild(particle);
+
+                playHeartbeat(150, 0.04);
+
+                setTimeout(() => {
+                    particle.remove();
+                }, 800);
+            }
+        });
+
+        // Background cosmic dust particles
+        function generateParticles() {
+            const container = document.body;
+            const particleCount = window.innerWidth < 768 ? 10 : 25;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('cosmic-particle');
+                
+                const size = Math.random() * 2.5 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                
+                container.appendChild(particle);
+
+                gsap.to(particle, {
+                    y: `random(-30, 30)`,
+                    x: `random(-30, 30)`,
+                    opacity: `random(0.1, 0.6)`,
+                    duration: `random(8, 14)`,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut"
+                });
+            }
+        }
+
+        // EXPLODED CARDS ASSEMBLER
+        function resetCardsToExploded() {
+            const explodeX = window.innerWidth < 768 ? 40 : 80;
+            const explodeY = window.innerWidth < 768 ? 40 : 80;
+
+            gsap.set(".card-part.corner-tl", { x: -explodeX, y: -explodeY, rotation: -90, opacity: 0 });
+            gsap.set(".card-part.corner-tr", { x: explodeX, y: -explodeY, rotation: 90, opacity: 0 });
+            gsap.set(".card-part.corner-bl", { x: -explodeX, y: explodeY, rotation: -180, opacity: 0 });
+            gsap.set(".card-part.corner-br", { x: explodeX, y: explodeY, rotation: 180, opacity: 0 });
+            gsap.set(".card-part.internal-visual", { scale: 0.2, z: 150, rotationX: 180, opacity: 0 });
+            gsap.set(".card-part.internal-text", { y: 40, rotationX: 90, opacity: 0 });
+        }
+
+        let hasAssembled = false;
+
+        function animateCardiacAssembly() {
+            if (hasAssembled) return;
+            hasAssembled = true;
+
+            const tl = gsap.timeline();
+            
+            tl.to(".card-part.corner-tl, .card-part.corner-tr, .card-part.corner-bl, .card-part.corner-br", {
+                x: 0,
+                y: 0,
+                rotation: 0,
+                opacity: 1,
+                stagger: 0.04,
+                duration: 0.6,
+                ease: "back.out(1.8)"
+            })
+            .to(".tilt-card", {
+                borderColor: "rgba(255, 204, 0, 0.2)",
+                duration: 0.2,
+                stagger: 0.08,
+                yoyo: true,
+                repeat: 1
+            }, "-=0.2")
+            .to(".card-part.internal-visual", {
+                scale: 1,
+                z: 0,
+                rotationX: 0,
+                opacity: 1,
+                stagger: 0.06,
+                duration: 0.65,
+                ease: "power4.out"
+            }, "-=0.4")
+            .to(".card-part.internal-text", {
+                y: 0,
+                rotationX: 0,
+                opacity: 1,
+                stagger: 0.06,
+                duration: 0.55,
+                ease: "power3.out"
+            }, "-=0.4");
+        }
+
+        // Intersection Observer scroll trigger setup
+        const observerOptions = {
+            root: null,
+            threshold: 0.25
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCardiacAssembly();
+                } else {
+                    resetCardsToExploded();
+                    hasAssembled = false;
+                }
+            });
+        }, observerOptions);
+
+        observer.observe(document.getElementById('services-grid'));
+
+        // Intro transition timeline
+        function triggerIntro() {
+            gsap.set("#app-content", { opacity: 0 });
+            gsap.set("#loader-overlay", { display: "flex", scale: 1, opacity: 1 });
+            gsap.set("#ekg-pulse-dot", { scale: 1, fill: "#FFCC00" });
+            gsap.set(ekgLaser, { strokeDashoffset: pathLength });
+            
+            resetCardsToExploded();
+            hasAssembled = false;
+
+            const masterTL = gsap.timeline();
+
+            masterTL.to(ekgLaser, {
+                strokeDashoffset: 0,
+                duration: 0.5,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    playHeartbeat(58, 0.85);
+                }
+            })
+            .to("#ekg-pulse-dot", { scale: 1.25, duration: 0.1, ease: "sine.out" })
+            .to("#ekg-pulse-dot", { scale: 0.95, duration: 0.05, ease: "sine.inOut" })
+            .to("#ekg-pulse-dot", { scale: 1.5, duration: 0.15, ease: "back.out(2)" })
+            .to("#loader-glow", {
+                scale: 3,
+                opacity: 0.8,
+                duration: 0.15,
+                yoyo: true,
+                repeat: 1
+            }, "-=0.25")
+            .to("#loader-overlay", {
+                scale: 45,
+                opacity: 0,
+                duration: 0.5,
+                ease: "power4.in",
+                onComplete: () => {
+                    gsap.set("#loader-overlay", { display: "none" });
+                }
+            })
+            .to("#app-content", {
+                opacity: 1,
+                duration: 0.2
+            }, "-=0.3")
+            .from("nav", {
+                y: -40,
+                opacity: 0,
+                duration: 0.8,
+                ease: "power4.out"
+            }, "-=0.2")
+            .from("#hero-heading", {
+                scale: 0.88,
+                opacity: 0,
+                y: 20,
+                duration: 0.8,
+                ease: "elastic.out(1, 0.8)"
+            }, "-=0.6")
+            .from("#hero-desc", {
+                opacity: 0,
+                x: -20,
+                duration: 0.7,
+                ease: "power3.out"
+            }, "-=0.5")
+            .from("#hero-buttons", {
+                opacity: 0,
+                y: 10,
+                duration: 0.6,
+                ease: "power3.out"
+            }, "-=0.4");
+        }
+
+        window.onload = function() {
+            generateParticles();
+            triggerIntro();
+        }
+    </script>
+</body>
+</html>
