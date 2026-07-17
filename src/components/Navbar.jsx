@@ -246,8 +246,10 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
 
   const handleNavLinkClick = (e, href) => {
     e.preventDefault();
+    const x = e.clientX || window.innerWidth / 2;
+    const y = e.clientY || window.innerHeight / 2;
     if (onNavigate) {
-      onNavigate(href, { x: e.clientX, y: e.clientY });
+      onNavigate(href, { x, y });
     }
   };
 
@@ -294,7 +296,10 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
         {/* Brand Logo */}
         <a 
           href="#" 
-          onClick={onLogoClick}
+          onClick={(e) => {
+            setIsOpen(false);
+            onLogoClick(e);
+          }}
           className={`logo-anchor ${themeClass}`}
           style={{
             display: 'flex',
@@ -302,7 +307,8 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
             gap: '0.6rem',
             textDecoration: 'none',
             fontFamily: 'var(--font-heading)',
-            position: 'relative'
+            position: 'relative',
+            zIndex: 1002
           }}
         >
           {/* Vector P capsule */}
@@ -769,11 +775,12 @@ export default function Navbar({ onOpenBonus, onNavigate, onLogoClick, currentPa
             WebkitBackdropFilter: 'blur(20px)',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             alignItems: 'center',
             gap: '1.8rem',
+            overflowY: 'auto',
             zIndex: 1001,
-            padding: '2rem',
+            padding: '6rem 2rem 3rem',
             boxSizing: 'border-box'
           }}
         >
