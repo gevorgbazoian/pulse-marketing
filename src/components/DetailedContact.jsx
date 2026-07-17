@@ -400,7 +400,7 @@ export default function DetailedContact({ onGoBack }) {
                 borderRadius: '30px',
                 border: '1.5px solid var(--accent)',
                 backgroundColor: 'transparent',
-                color: 'var(--text-primary)',
+                color: '#FAF6F1',
                 fontFamily: 'var(--font-heading)',
                 fontWeight: 800,
                 fontSize: '0.85rem',
